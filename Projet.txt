@@ -1,0 +1,107 @@
+PROJET INFO - S2
+GESTION INFORMATIQUE DES TOURNOIS SPORTIFS
+
+
+CONTEXTE
+Les compétitions sportives prennent des formes variées selon la discipline concernée. Dans ce projet, nous allons nous intéresser à
+la gestion de tournoi, peu importe le sport pratiqué : football, rugby, tennis, handball, basketball, pétanque, poker, etc.
+La gestion d’un tournoi repose sur plusieurs éléments clés :
+• Inscription : la première phase est celle de l’inscription (individuelle ou par équipe)
+• Organisation des rencontres : planification des matchs selon un calendrier logique.
+• Gestion des scores et classements : mise à jour des résultats et calcul des points.
+• Systèmes d’élimination et de qualification : passage d’une phase à une autre.
+• Contraintes logistiques : disponibilité des terrains, horaires des équipes, gestion des arbitres.
+Ce projet vise à concevoir un système informatique capable de gérer différents types de tournois en proposant des outils
+d’organisation, de suivi et d’affichage des résultats. L’objectif est d’offrir une solution adaptable aux spécificités de chaque sport.
+
+
+CONTRAINTES
+La formule tournoi consiste en un mini-championnat qui est organisé sur un jour, un week-end, ou sur plusieurs jours, entre un nombre
+restreint d’équipes (ou de personnes) qui se rencontrent en une seule phase. En fonction du nombre d’équipes inscrites à un tournoi,
+il est possible de répartir ces dernières de manière équilibrée (plus ou moins une équipe selon le nombre d’équipes inscrites au
+tournoi) dans un ensemble de poules afin de limiter le nombre total de matchs joués.
+Dans tous les cas, un tournoi ne sera jamais organisé si un minimum de 3 matchs n’est pas joué par équipe.
+Le nombre de joueurs par équipe dépend du sport choisi. Par exemple 7 joueurs par équipe pour le rugby à 7, en solo ou en
+double pour le tennis, 5 ou 3 pour le basketball, etc.
+Les règles de classement sont fonction du sport choisi. Souvent, une victoire vaut 3 points, un match nul 1 point, perdu 0 point. À la
+fin de la phase de poule, le classement peut alors être établi.
+Durant un match, dans le but d’effectuer des statistiques on ne retiendra pas que le score final, mais aussi l’historique des scores.
+D’autres éléments sont fonction du sport choisi : le temps d’une partie pour n’en citer qu’un, et certainement d’autres éléments dont
+vous serez libre de définir.
+Le nombre d’équipe est borné et est fonction du nombre de terrains disponibles, de la durée du tournoi, du temps que dure un
+match. Lors de la phase de poule, par souci d’équité, il est souhaitable qu’une équipe ne joue pas deux matchs dans deux plages
+consécutives d’une même journée, leur laissant ainsi un temps suffisant de récupération.
+Après la phase de poule se jouent les matchs à éliminations directs en commençant soit par les 1/8 ou ¼ de finale (ce choix est
+fait à la création du tournoi). Les équipes jouant les matchs à éliminations directs sont choisies selon les règles du tournoi. Plusieurs
+solutions sont possibles et vous êtes libre de les définir.
+
+
+EXPRESSIONS DU BESOIN
+Le projet doit répondre aux attentes suivantes :
+• L’organisateur du tournoi doit pouvoir définir les paramètres du tournoi (nombre de terrains, date du tournoi, sport
+pratiqué, règles du tournoi, autres à définir)
+• Les équipes peuvent s’inscrire à un tournoi. Celui qui fait l’inscription devient le capitaine de l’équipe. Durant l’inscription,
+le capitaine renseigne les éléments nécessaires, notamment le nom de l’équipe, et le nom des différents joueurs.
+• Si le nombre d’équipes est suffisant, l’organisateur planifie les poules, les rencontres, en fonction des terrains disponibles,
+et autres critères. Si le nombre d’équipes est trop important, l’organisateur peut jouer sur la durée des matchs pour que
+toutes les équipes puissent jouer. Sinon un tirage au sort sera effectué pour ne garder que le nombre possible, ou bien
+les inscriptions sont closes lorsque le nombre d'équipe maximum est atteint.
+• Le calendrier des rencontres peut être visualisé en fonction de différents critères : par terrain, par poule, par équipe,
+autres. L’organisateur peut avoir une vue d’ensemble de toutes les rencontres.
+• L’organisateur peut saisir les scores d’un match en temps réel, et les utilisateurs de l’application peuvent visualiser suivre
+un match en temps réel (score et historique des scores).
+• Les utilisateurs peuvent visualiser le classement actuel d’un tournoi en fonction de la poule.
+• À la fin de la phase de poule, l’organisateur du tournoi planifie les matchs à élimination directe du 1/8 à la finale.
+• Les utilisateurs peuvent visualiser les statistiques diverses : meilleur buteur, meilleure attaque, nombre de buts par match,
+etc.
+• L’organisateur du tournoi peut paramétrer un nouveau sport avec ces règles propres.
+
+
+DÉMARCHE PROJET
+Dans un projet on doit procéder par palier. Bien qu’ambitieux dans la démarche ce projet doit vous amener à franchir plusieurs
+paliers. Le but étant d’aller le plus loin possible.
+Nous faisons ici de la simulation de données. Il vous appartient donc de faire un certain nombre de choix, ou de fixer des
+hypothèses cohérentes non fournies dans le sujet. Vous pouvez pour cela vous documenter sur le sujet.
+Voici quelques étapes ou fonctionnalités à réaliser.
+1. Définir la structure de la base de données
+3. Concevoir les algorithmes de gestion du tournoi
+4. Développer une interface de gestion pour l’organisateur
+5. Développer une interface pour les utilisateurs
+6. Implémenter le suivi en temps réel des matchs
+7. Optimiser et tester le système
+8. Extensions possibles (si le temps le permet)
+Une démarche c’est aussi l’utilisation d’outil adapté
+1. Pour la planification et la gestion du projet. L’objectif est d’organiser les tâches, suivre l'avancement et gérer l'équipe.
+Quelques outils recommandés :
+• Trello, Jira : Gestion des tâches.
+• GanttProject, Microsoft Project : diagrammes de Gantt pour le planning.
+• Miro, Lucidchart : brainstorming et conception visuelle.
+• GitHub Projects : suivi de tâches intégré au code.
+1. Pour la gestion des versions Git (GitHub, GitLab) est l’outil incontournable qui permet :
+• Suivi des modifications du code.
+• Collaboration entre plusieurs développeurs.
+• Revenir à une version précédente si un problème survient.
+
+
+CHOIX DE LA TECHNOLOGIE
+La technologie est dans ce projet imposée : Flask + SQLite
+Flask est un Framework léger pour créer des applications web avec Python. Il permet de gérer facilement les routes HTTP
+Documentation officielles : https://flask.palletsprojects.com/en/latest/
+Bien que SQLite ne gère pas correctement les accès simultanés, c’est cette BDD qui sera choisie. Elle présente l’avantage d’avoir
+été étudié en cours et d’être facilement partageable.
+DOCUMENTATION
+La documentation doit reprendre les éléments d’un développement classique d’une application :
+Chaque phase doit faire l’objet d’un dossier :
+• Dossier d’analyse conception.
+• Dossier de code
+• Dossier de test
+• Dossier planification et suivi de projet
+• Document utilisateur
+Le dossier d’analyse conception est le plus important dans un projet puisqu’il est la base de la réflexion avant codage. Il reprend
+les points suivants :
+• Identification des utilisateurs
+• Cas d’usage
+• Contraintes techniques et fonctionnelles
+• Schéma de la base de données (tables, relations…)
+• Architecture logicielle et matérielle
+• Interface utilisateur : Maquettes des écrans, Navigation entre les pages
