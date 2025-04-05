@@ -29,9 +29,9 @@ def orgaLogin():
     return render_template('orgaLogin.html')
 
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/createTournament', methods=['GET', 'POST'])
 def create():
-    return render_template('create.html')
+    return render_template('createTournament.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
