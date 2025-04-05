@@ -22,31 +22,25 @@ def orgaLogin():
             return render_template('orgaLogin.html', error="Password is empty")
 
         if lg.IsLoginCorrect(databaseId, password):
-
-            return render_template("/createTournament", isCreating=False)
+            return "Vous êtes connecté"
+            #return redirect(url_for('dashboard'))
         else:
-            return render_template('orgaLogin.html', parametersList=lg.getParamatersList(databaseId), error="Identifiants invalides.")
+            return render_template('orgaLogin.html', error="Identifiants invalides.")
     return render_template('orgaLogin.html')
 
 
 @app.route('/createTournament', methods=['GET', 'POST'])
 def create():
-    tournamentList = []
     if request.method == 'POST':
         tournamentDict = {}
-        inputsNameList = ["sport", "matchDuration", "teamSize", "availableSportFields", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points"]
+        inputsNameList = ["sport", "matchDuration", "teamSize", "availableSportFields", "algorithm", "maxTeamNumbber", "teamSelectionMethod", "points", "tournamentId", "password"]
 
         for k in inputsNameList:
             tournamentDict[k] = request.form.get(k)
-            tournamentList.append(request.form.get(k))
-        tournamentId = request.form.get("tournamentId")
-        password = request.form.get("password")
 
-        print(tournamentList)
-
-        for (key, value) in tournamentDict.items():
+        for (key, value) in tournamentDict:
             if value == "":
-                return render_template("createTournament.html", error=key+" is empty", parametersList=tournamentList, isCreating=True)
+                return render_template("createTournament.html", error=key+" is empty")
         
         try:
             int(tournamentDict["matchDuration"])
@@ -54,17 +48,17 @@ def create():
             int(tournamentDict["availableSportsField"])
             int(tournamentDict["maxTeamNumber"])
         except:
-            return render_template('createTournament.html', error="Invalid data type", parametersList=tournamentList, isCreating=True)
+            return render_template('createTournament.html', error="Invalid data type")
 
-        if not lg.IsUniqueId(tournamentId):
-            return render_template('createTournament.html', error="Id already taken", parametersList=tournamentList, isCreating=True)
+        if not lg.IsUniqueId(tournamentDict["tournamentId"]):
+            return render_template('createTournament.html', error="Id already taken")
 
         #if ... in
 
-        lg.AddNewLogin(tournamentId, password)
-        dbm.createTournament(tournamentId, tournamentDict)
-        
-    return render_template('createTournament.html', parametersList=tournamentList, isCreating=True)
+        lg.AddNewLogin(tournamentDict["tournamentId"], tournamentDict["password"])
+
+        #perform databasecreation
+    return render_template('createTournament.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
