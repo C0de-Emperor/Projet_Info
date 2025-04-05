@@ -1,0 +1,35 @@
+Il faut faire une application avec de multiples facettes, mais toutes centrées autour d'une base de donnée:
+    - Organisateur:
+Interface de renseignement des caractéristiques du sport joué, de renseignement des matériels mis à disposition -> présentation des différentes poules et matchs proposés
+    - Arbitre:
+Interface de renseignement des points marqués, d'informations concernant les matchs à venir
+    - Chef d'équipe:
+Interface de renseignement des membres de l'équipe, du nom de l'équipe.
+    Visiteur:
+Interface d'informations concernant les matchs à venir, de statistiques à propos des matchs passés, et potentiellement les statistiques de matchs en direct
+
+
+Structure de la base de données:
+
+PLAYERS                         TEAMS                                   TEAMSAFFILIATION            MATCHS                              POINTS                          FIELDS
+
+playerId int (PK)               teamId int (PK)                         playerId int                matchId int (PK)                    pointId int (PK)                fieldId int (PK)
+playerName varchar              teamName varchar (UNIQUE)               teamId int                  matchDate datetime                  matchId int (FK -> MATCHS)      fieldName varchar
+playerFirstName varchar         teamChiefPlayer int (FK -> PLAYERS)     PK(playerId, teamId)        matchFieldId int (FK -> FIELDS)     playerId int (FK -> PLAYERS)
+                                                                                                    team1Id int (FK -> TEAMS)           numberOfPoints int
+                                                                                                    team2Id int (FK -> TEAMS)           team1Scored boolean
+
+
+Plus un fichier CSV afin de stocker les paramètres du tournoi pour l'organisateur:
+
+nom du sport ; 
+temps de jeu par match ; 
+nombre de joueurs par équipe ; 
+[date du tournoi] ; 
+nombre de terrains disponibles ; 
+méthode d'algorithme de rencontre ; 
+nombre d'équipes max ; 
+méthode de sélection des équipes ; 
+points pour victoire ;
+points pour nul ;
+points pour défaite ;
