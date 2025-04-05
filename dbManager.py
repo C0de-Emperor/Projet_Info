@@ -1,10 +1,6 @@
 import sqlite3
 
-databasePath = "database.db"
-
 def createDatabase(databaseName = "database"):
-    global databasePath
-
     createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50));",
         "CREATE TABLE players (playerId INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
@@ -27,8 +23,8 @@ def createDatabase(databaseName = "database"):
 
     databasePath=databaseName+".db"
 
-def addTeam(teamName, teamPlayers, teamChiefIndex):
-    connexion = sqlite3.connect(databasePath)
+def addTeam(teamName, teamPlayers, teamChiefIndex, databaseName = "database"):
+    connexion = sqlite3.connect(databaseName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT playerId FROM players ORDER BY playerId DESC;")
@@ -44,8 +40,8 @@ def addTeam(teamName, teamPlayers, teamChiefIndex):
 
     connexion.close()
 
-def addFields(fieldsList):
-    connexion = sqlite3.connect(databasePath)
+def addFields(fieldsList, databaseName = "database"):
+    connexion = sqlite3.connect(databaseName+".db")
     cursor = connexion.cursor()
 
     for k in fieldsList:
@@ -54,8 +50,8 @@ def addFields(fieldsList):
 
     connexion.close()
 
-def addMatches(matchesList):
-    connexion = sqlite3.connect(databasePath)
+def addMatches(matchesList, databaseName = "database"):
+    connexion = sqlite3.connect(databaseName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT matchId FROM matches ORDER BY matchID DESC;")
@@ -70,10 +66,10 @@ def addMatches(matchesList):
 
     connexion.close()
 
-def addPoint(matchId, playerId, numberOfPoints, team1Scored):
+def addPoint(matchId, playerId, numberOfPoints, team1Scored, databaseName = "database"):
     global lastPointId
 
-    connexion = sqlite3.connect(databasePath)
+    connexion = sqlite3.connect(databaseName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT pointId FROM points ORDER BY points DESC;")
