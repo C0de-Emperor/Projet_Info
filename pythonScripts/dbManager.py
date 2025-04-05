@@ -1,7 +1,6 @@
 import sqlite3
 
-def createDatabase(databaseName = "database"):
-    createDatabaseInstructions = [
+createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50));",
         "CREATE TABLE players (playerId INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
@@ -9,10 +8,12 @@ def createDatabase(databaseName = "database"):
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN);"
     ]
 
-    file=open(databaseName+".db", "w")
-    file.close()
+def createTournament(tournamentId, tournamentDict):
+    
+    f=open("tournament"+tournamentId+"Database.db", "w")
+    f.close()
 
-    connexion = sqlite3.connect(databaseName+".db")
+    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     for k in createDatabaseInstructions:
@@ -21,10 +22,19 @@ def createDatabase(databaseName = "database"):
 
     connexion.close()
 
-    databasePath=databaseName+".db"
+    with open(databasePath+databaseName+".csv", "w") as f:
+        for (keys, values) in tournamentDict.items():
+            f.write(values+"\n")
+    
+    return ""
 
-def addTeam(teamName, teamPlayers, teamChiefIndex, databaseName = "database"):
-    connexion = sqlite3.connect(databaseName+".db")
+
+def addTeam(teamName, teamPlayers, teamChiefIndex, tournamentId):
+
+    for k in range(len(teamPlayers)):
+        if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
+
+    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT playerId FROM players ORDER BY playerId DESC;")
@@ -40,8 +50,12 @@ def addTeam(teamName, teamPlayers, teamChiefIndex, databaseName = "database"):
 
     connexion.close()
 
-def addFields(fieldsList, databaseName = "database"):
-    connexion = sqlite3.connect(databaseName+".db")
+    return ""
+
+
+def addFields(fieldsList, tournamentId):
+
+    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     for k in fieldsList:
@@ -50,8 +64,17 @@ def addFields(fieldsList, databaseName = "database"):
 
     connexion.close()
 
-def addMatches(matchesList, databaseName = "database"):
-    connexion = sqlite3.connect(databaseName+".db")
+    return ""
+
+
+def addMatches(matchesList, tournamentId):
+
+    for k in range(len(matchesList)):
+        if len(matchesList[k])!=4: return "match n°"+str(k+1)+" has a problem of arguments"
+        if type(matchesList[k][0])!=str: return "the date of match n°"+str(k+1)+" should be a string"
+        if type(matchesList[k][1])!=int: return "the fieldNumber of n°"+str(k+1)+" should be an integer"
+
+    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT matchId FROM matches ORDER BY matchID DESC;")
@@ -66,10 +89,17 @@ def addMatches(matchesList, databaseName = "database"):
 
     connexion.close()
 
-def addPoint(matchId, playerId, numberOfPoints, team1Scored, databaseName = "database"):
-    global lastPointId
+    return ""
 
-    connexion = sqlite3.connect(databaseName+".db")
+
+def addPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentId):
+
+    if type(matchId)!=int: return "matchId should be an integer"
+    if type(playerId)!=int: return "playerId should be an integer"
+    if type(numberOfPoints)!=int: return "numberOfPoints should be an integer"
+    if type(team1Scored)!=bool: return "team1Scored should be a boolean"
+
+    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT pointId FROM points ORDER BY points DESC;")
@@ -81,4 +111,7 @@ def addPoint(matchId, playerId, numberOfPoints, team1Scored, databaseName = "dat
     lastPointId+=1
 
     connexion.close()
+
+    return ""
+
 
