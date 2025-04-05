@@ -11,16 +11,16 @@ Interface d'informations concernant les matchs à venir, de statistiques à prop
 
 Structure de la base de données:
 
-PLAYERS                         TEAMS                        MATCHS                                 POINTS                          FIELDS
+PLAYERS                                 TEAMS                        MATCHS                                 POINTS                          FIELDS
 
-playerId int (PK)               teamName varchar(50) (PK)    matchId int (PK)                       pointId int (PK)                fieldName varchar (PK)
-playerName varchar                                           matchDate datetime                     matchId int (FK -> MATCHS)      
-playerFirstName varchar                                      matchFieldId int (FK -> FIELDS)        playerId int (FK -> PLAYERS)
-playerTeam varchar(50) (FK -> TEAMS)                         team1Name varchar(50) (FK -> TEAMS)    numberOfPoints int
-isTeamChief bool                                             team2Name varchar(50) (FK -> TEAMS)    team1Scored boolean
+playerId int (PK)                       teamName varchar(50) (PK)    matchId int (PK)                       pointId int (PK)                fieldName varchar (PK)
+playerName varchar                                                   matchDate datetime                     matchId int (FK -> MATCHS)      
+playerFirstName varchar                                              matchFieldId int (FK -> FIELDS)        playerId int (FK -> PLAYERS)
+playerTeam varchar(50) (FK -> TEAMS)                                 team1Name varchar(50) (FK -> TEAMS)    numberOfPoints int
+isTeamChief bool                                                     team2Name varchar(50) (FK -> TEAMS)    team1Scored boolean
 
 
-Plus un fichier CSV afin de stocker les paramètres du tournoi pour l'organisateur:
+Plus un fichier .txt afin de stocker les paramètres du tournoi pour l'organisateur:
 
 nom du sport ; 
 temps de jeu par match ; 
