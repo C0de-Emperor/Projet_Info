@@ -7,7 +7,7 @@
 {% block body %}
 <form class="form" autocomplete="off" action="/create" method="POST">
   <div class="control">
-    <h1>Create Tournament</h1>
+    <h1> {% if createOrModify %} createOrModify {% endif %} Tournament</h1>
   </div>
 
   {% if error %}
