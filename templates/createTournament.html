@@ -85,7 +85,7 @@
 
       {% if isCreating %}
       <div class="control block-cube block-input">
-        <input type="text" name="tournamentId" placeholder="Tournament Id" value={{parametersList[8]}}>
+        <input type="text" name="tournamentName" placeholder="Tournament Name" value={{parametersList[8]}}>
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -98,7 +98,7 @@
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
       {% endif %}
-      
+
     </div>
   </div>
 
@@ -106,7 +106,14 @@
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
-    <span class="text">Create</span>
+    <span class="text">
+      {% if isCreating %}
+        Create
+      {% else %}
+        Save changes
+      {% endif %}
+
+    </span>
   </button>
 </form>
 {% endblock %}
