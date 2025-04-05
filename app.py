@@ -7,26 +7,26 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('login.html')
+    return render_template('index.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/orgaLogin', methods=['GET', 'POST'])
+def orgaLogin():
     if request.method == 'POST':
         databaseId = request.form.get('databaseId')
         password = request.form.get('password')
 
         if databaseId == "" :
-            return render_template('login.html', error="Database Id is empty")
+            return render_template('orgaLogin.html', error="Database Id is empty")
         if password == "" :
-            return render_template('login.html', error="Password is empty")
+            return render_template('orgaLogin.html', error="Password is empty")
 
         if lg.IsLoginCorrect(databaseId, password):
             return "Vous êtes connecté"
             #return redirect(url_for('dashboard'))
         else:
-            return render_template('login.html', error="Identifiants invalides.")
-    return render_template('login.html')
+            return render_template('orgaLogin.html', error="Identifiants invalides.")
+    return render_template('orgaLogin.html')
 
 
 @app.route('/create', methods=['GET', 'POST'])
