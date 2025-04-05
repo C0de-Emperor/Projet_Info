@@ -22,14 +22,14 @@ isTeamChief bool                                             team2Name varchar(5
 
 Plus un fichier CSV afin de stocker les paramètres du tournoi pour l'organisateur:
 
-nom du sport ; 
-temps de jeu par match ; 
-nombre de joueurs par équipe ; 
+nom du sport ; OK
+temps de jeu par match ; OK
+nombre de joueurs par équipe ; OK
 [date du tournoi] ; 
-nombre de terrains disponibles ; 
-méthode d'algorithme de rencontre ; 
-nombre d'équipes max ; 
+nombre de terrains disponibles ; OK
+méthode d'algorithme de rencontre ; OK
+nombre d'équipes max ; OK
 méthode de sélection des équipes ; 
-points pour victoire ;
+points pour victoire ; OK OK OK
 points pour nul ;
 points pour défaite ;

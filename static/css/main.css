@@ -168,3 +168,27 @@
   .create a:hover {
     opacity: 1;
   }
+
+  .form {
+    /* On augmente la largeur globale pour contenir deux colonnes de 300px plus un espace entre elles */
+    width: 620px; 
+    padding: 64px 15px 24px;
+    margin: 0 auto;
+  }
+  
+  /* Container pour les colonnes */
+  .columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Espace entre les colonnes */
+  }
+  
+  /* Chaque colonne aura exactement 300px de largeur */
+  .column {
+    width: 300px;
+  }
+  
+  /* Les inputs à l'intérieur de chaque colonne conservent 100% de la largeur de leur conteneur (donc 300px) */
+  .column .control input {
+    width: 100%;
+  }
