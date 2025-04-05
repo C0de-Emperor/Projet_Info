@@ -1,53 +1,101 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Create new Tournament</title>
+  <title>Create new Tournament</title>
 {% endblock %}
 
-
 {% block body %}
-<form class="form" autocomplete="off" action='/create' method="POST" >
+<form class="form" autocomplete="off" action="/create" method="POST">
   <div class="control">
-    <h1>Sign In</h1>
+    <h1>Create Tournament</h1>
   </div>
 
   {% if error %}
       <p style="color: red;">{{ error }}</p>
   {% endif %}
 
-  <div class="control block-cube block-input">
-    <input type="text" name="sport" placeholder="Sport">
-    <div class="bg-top"><div class="bg-inner"></div></div>
-    <div class="bg-right"><div class="bg-inner"></div></div>
-    <div class="bg"><div class="bg-inner"></div></div>
-  </div>
-  
-    <div class="control block-cube block-input">
-      <input type="text" name="sport" placeholder="Sport">
-      <div class="bg-top"><div class="bg-inner"></div></div>
-      <div class="bg-right"><div class="bg-inner"></div></div>
-      <div class="bg"><div class="bg-inner"></div></div>
+  <!-- Container flex pour les deux colonnes -->
+  <div class="columns">
+    <div class="column">
+      <div class="control block-cube block-input">
+        <input type="text" name="sport" placeholder="Sport">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="matchDuration" placeholder="Match Duration">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="teamSize" placeholder="Team Size">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="availableSportsFields" placeholder="Available Sports Fields">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="algorithm" placeholder="Algorithm">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
     </div>
 
-  <div class="control block-cube block-input">
-    <input type="password" name="tournamentId" placeholder="Tournament Id">
-    <div class="bg-top"><div class="bg-inner"></div></div>
-    <div class="bg-right"><div class="bg-inner"></div></div>
-    <div class="bg"><div class="bg-inner"></div></div>
-  </div>
+    <div class="column">
+      <div class="control block-cube block-input">
+        <input type="text" name="maxTeamNumber" placeholder="Max Team Number">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
 
-  <div class="control block-cube block-input">
-    <input type="password" name="password" placeholder="Password">
-    <div class="bg-top"><div class="bg-inner"></div></div>
-    <div class="bg-right"><div class="bg-inner"></div></div>
-    <div class="bg"><div class="bg-inner"></div></div>
+      <div class="control block-cube block-input">
+        <input type="text" name="teamSelectionMethod" placeholder="Team Selection Method">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="points" placeholder="Points">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="tournamentId" placeholder="Tournament Id">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="password" name="password" placeholder="Password">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+    </div>
   </div>
 
   <button class="btn block-cube block-cube-hover" type="submit">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
-    <span class="text">Log In</span>
+    <span class="text">Create</span>
   </button>
 </form>
 {% endblock %}
