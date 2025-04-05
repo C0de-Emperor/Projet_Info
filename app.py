@@ -50,12 +50,12 @@ def create():
         except:
             return render_template('createTournament.html', error="Invalid data type")
 
-        if not lg.IsUniqueId(tournamentId):
+        if not lg.IsUniqueId(tournamentDict["tournamentId"]):
             return render_template('createTournament.html', error="Id already taken")
 
         #if ... in
 
-        lg.AddNewLogin(tournamentId, password)
+        lg.AddNewLogin(tournamentDict["tournamentId"], tournamentDict["password"])
 
         #perform databasecreation
     return render_template('createTournament.html')
