@@ -91,10 +91,14 @@
       </div>
 
       <div class="control block-cube block-input">
-        <input type="password" name="password" placeholder="Password" value="{{ parametersList[9] }}">
+        <input type="password" name="password" placeholder="Password" value="{{ parametersList[9]}}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+      {% else %}
+      <div id="changingTournamentInput">
+        <input type="text" name="tournamentName" value="{{parametersList[8]}}">
       </div>
       {% endif %}
 

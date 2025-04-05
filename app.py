@@ -38,10 +38,13 @@ def create():
         for k in inputsNameList:
             tournamentDict[k] = request.form.get(k)
             tournamentList.append(request.form.get(k))
-        tournamentId = request.form.get("tournamentName")
+        tournamentName = request.form.get("tournamentName")
         password = request.form.get("password")
-        tournamentList.append(tournamentId)
+        tournamentList.append(tournamentName)
         tournamentList.append(password)
+
+        if " " in tournamentName:
+            return render_template('createTournament.html', error="The tournament's name musnt have spaces in it", parametersList=tournamentList, isCreating=True)
 
         for (key, value) in tournamentDict.items():
             if value == "":
@@ -55,13 +58,19 @@ def create():
         except:
             return render_template('createTournament.html', error="Invalid data type", parametersList=tournamentList, isCreating=True)
 
-        if not lg.IsUniqueId(tournamentId):
+        if password==None:
+            dbm.writeTournamentParameters(tournamentName, tournamentDict)
+            return render_template("orgaLogin.html", error="Tournament successfully modified")
+
+        if not lg.IsUniqueId(tournamentName):
             return render_template('createTournament.html', error="Id already taken", parametersList=tournamentList, isCreating=True)
 
         #if ... in
 
-        lg.AddNewLogin(tournamentId, password)
-        dbm.createTournament(tournamentId, tournamentDict)
+        lg.AddNewLogin(tournamentName, password)
+        dbm.createTournament(tournamentName, tournamentDict)
+
+        return render_template("orgaLogin.html", error="Tournament successfully created")
         
     return render_template('createTournament.html', parametersList=tournamentList, isCreating=True)
 

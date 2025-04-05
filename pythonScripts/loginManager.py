@@ -34,6 +34,11 @@ def IsUniqueId (databaseId:str) -> bool:
     return False
 
 def getParamatersList(databaseId):
+    tournamentList=[]
     with open("databases/tournament"+databaseId+"Database.txt", "r") as f:
         lines = f.readlines()
-        print(lines)
+        for k in lines:
+            tournamentList.append(k.strip())
+    tournamentList.append(databaseId)
+
+    return tournamentList
