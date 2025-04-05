@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+<title>Login</title>
 {% endblock %}
 
 
 {% block body %}
-<h1>Coucou</h1>
+<div class="content">
+    <h1>HElloO</h1>
+    
+    <form action="/" method="POST">
+        <input type="text" name="content" id="content">
+        <input type="submit" value="Add Task">
+    </form>
+</div>
 {% endblock %}
