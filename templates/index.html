@@ -6,12 +6,34 @@
 
 
 {% block body %}
-<div class="content">
-    <h1>HElloO</h1>
-    
-    <form action="/" method="POST">
-        <input type="text" name="content" id="content">
-        <input type="submit" value="Add Task">
-    </form>
-</div>
+<form class="form" autocomplete="off" action='/' method="POST" >
+    <div class="control">
+      <h1>Sign In</h1>
+    </div>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <div class="control block-cube block-input">
+      <input type="text" name="username" placeholder="Username">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <div class="control block-cube block-input">
+      <input type="password" name="password" placeholder="Password">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <button class="btn block-cube block-cube-hover" type="submit">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+      <span class="text">Log In</span>
+    </button>
+  </form>
 {% endblock %}
