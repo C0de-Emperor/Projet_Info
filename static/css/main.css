@@ -153,22 +153,18 @@
     top: 100%;
   }
   
-  .credits {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    padding: 15px 15px;
-    width: 100%;
-    z-index: 111;
+  .create {
+    margin-top: 20px; /* espace au-dessus */
+    text-align: center; /* centrer le texte si besoin */
   }
   
-  .credits a {
+  .create a {
     opacity: 0.6;
     color: #fff;
     font-size: 11px;
     text-decoration: none;
   }
   
-  .credits a:hover {
+  .create a:hover {
     opacity: 1;
   }

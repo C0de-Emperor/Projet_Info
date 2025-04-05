@@ -6,7 +6,7 @@
 
 
 {% block body %}
-<form class="form" autocomplete="off" action='/' method="POST" >
+<form class="form" autocomplete="off" action='/login' method="POST" >
     <div class="control">
       <h1>Sign In</h1>
     </div>
@@ -16,7 +16,7 @@
     {% endif %}
 
     <div class="control block-cube block-input">
-      <input type="text" name="username" placeholder="Username">
+      <input type="text" name="databaseId" placeholder="Database Id">
       <div class="bg-top"><div class="bg-inner"></div></div>
       <div class="bg-right"><div class="bg-inner"></div></div>
       <div class="bg"><div class="bg-inner"></div></div>
@@ -35,5 +35,9 @@
       <div class="bg"><div class="bg-inner"></div></div>
       <span class="text">Log In</span>
     </button>
+
+    <div class="create">
+      <a href="/create" target="_blank">Create new Tournament</a>
+    </div>
   </form>
 {% endblock %}
