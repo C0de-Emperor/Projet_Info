@@ -1,6 +1,6 @@
 import sqlite3
 
-dataBasePath = r"PasswordsDatabase.db"
+dataBasePath = r"passwordsDatabase.db"
 
 def IsLoginCorrect(databaseId:str, password:str) -> bool:
     connexion = sqlite3.connect(dataBasePath)
@@ -26,7 +26,6 @@ def IsUniqueId (databaseId:str) -> bool:
     connexion = sqlite3.connect(dataBasePath)
     cursor = connexion.cursor()
 
-    print(cursor.execute(f"""SELECT count(*) FROM Login WHERE tournamentId = "{databaseId}";""").fetchone()[0]<=0)
     if cursor.execute(f"""SELECT count(*) FROM Login WHERE tournamentId = "{databaseId}";""").fetchone()[0] <= 0:
         connexion.close()
         return True
