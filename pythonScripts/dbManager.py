@@ -10,10 +10,10 @@ createDatabaseInstructions = [
 
 def createTournament(tournamentId, tournamentDict):
     
-    f=open("tournament"+tournamentId+"Database.db", "w")
+    f=open("databases/tournament"+tournamentId+"Database.db", "w")
     f.close()
 
-    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
+    connexion = sqlite3.connect("databases/tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     for k in createDatabaseInstructions:
@@ -22,7 +22,7 @@ def createTournament(tournamentId, tournamentDict):
 
     connexion.close()
 
-    with open("tournament"+tournamentId+"Database.txt", "w") as f:
+    with open("databases/tournament"+tournamentId+"Database.txt", "w") as f:
         for (keys, values) in tournamentDict.items():
             f.write(values+"\n")
     
@@ -34,7 +34,7 @@ def addTeam(teamName, teamPlayers, teamChiefIndex, tournamentId):
     for k in range(len(teamPlayers)):
         if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
 
-    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
+    connexion = sqlite3.connect("databases/tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT playerId FROM players ORDER BY playerId DESC;")
@@ -55,7 +55,7 @@ def addTeam(teamName, teamPlayers, teamChiefIndex, tournamentId):
 
 def addFields(fieldsList, tournamentId):
 
-    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
+    connexion = sqlite3.connect("databases/tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     for k in fieldsList:
@@ -74,7 +74,7 @@ def addMatches(matchesList, tournamentId):
         if type(matchesList[k][0])!=str: return "the date of match n°"+str(k+1)+" should be a string"
         if type(matchesList[k][1])!=int: return "the fieldNumber of n°"+str(k+1)+" should be an integer"
 
-    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
+    connexion = sqlite3.connect("databases/tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT matchId FROM matches ORDER BY matchID DESC;")
@@ -99,7 +99,7 @@ def addPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentId):
     if type(numberOfPoints)!=int: return "numberOfPoints should be an integer"
     if type(team1Scored)!=bool: return "team1Scored should be a boolean"
 
-    connexion = sqlite3.connect("tournament"+tournamentId+"Database.db")
+    connexion = sqlite3.connect("databases/tournament"+tournamentId+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT pointId FROM points ORDER BY points DESC;")

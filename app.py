@@ -41,8 +41,8 @@ def create():
             tournamentList.append(request.form.get(k))
         tournamentId = request.form.get("tournamentId")
         password = request.form.get("password")
-
-        print(tournamentList)
+        tournamentList.append(tournamentId)
+        tournamentList.append(password)
 
         for (key, value) in tournamentDict.items():
             if value == "":
@@ -51,7 +51,7 @@ def create():
         try:
             int(tournamentDict["matchDuration"])
             int(tournamentDict["teamSize"])
-            int(tournamentDict["availableSportsField"])
+            int(tournamentDict["availableSportFields"])
             int(tournamentDict["maxTeamNumber"])
         except:
             return render_template('createTournament.html', error="Invalid data type", parametersList=tournamentList, isCreating=True)
