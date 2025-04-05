@@ -43,15 +43,15 @@ def create():
                 return render_template("createTournament.html", error=key+" is empty")
         
         try:
-            int(matchDuration)
-            int(teamSize)
-            int(availableSportsFields)
-            int(maxTeamNumber)
+            int(tournamentDict["matchDuration"])
+            int(tournamentDict["teamSize"])
+            int(tournamentDict["availableSportsField"])
+            int(tournamentDict["maxTeamNumber"])
         except:
-            return render_template('create.html', error="Invalid data type")
+            return render_template('createTournament.html', error="Invalid data type")
 
         if not lg.IsUniqueId(tournamentId):
-            return render_template('create.html', error="Id already taken")
+            return render_template('createTournament.html', error="Id already taken")
 
         #if ... in
 
