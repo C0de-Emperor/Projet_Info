@@ -17,3 +17,12 @@ def AddNewLogin(databaseId:str, password:str):
 
     cursor.execute(f""":INSERT INTO Login (tournamentId, password) VALUES ('{databaseId}', '{password}');""")
     connexion.commit()
+
+def IsUniqueId (databaseId:str) -> bool:
+    connexion = sqlite3.connect(dataBasePath)
+    cursor = connexion.cursor()
+
+    if cursor.execute(f"""SELECT count(*) FROM Login WHERE tournamentId = "{databaseId}";""").fetchone()[0] <= 0:
+        return False
+
+    return True
