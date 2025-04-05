@@ -18,6 +18,16 @@
     padding: 64px 15px 24px;
     margin: 0 auto;
   }
+
+  .form.index-form {
+    width: 300px;
+    padding: 30px 15px 1px;
+    margin: 0 auto;
+  }
+
+  .div.index-div{
+    padding-top: 100px;
+  }
   
   .form .control {
     margin: 0 0 24px;
