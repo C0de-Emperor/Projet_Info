@@ -22,7 +22,7 @@ def createTournament(tournamentId, tournamentDict):
 
     connexion.close()
 
-    with open(databasePath+databaseName+".csv", "w") as f:
+    with open("tournament"+tournamentId+"Database.txt", "w") as f:
         for (keys, values) in tournamentDict.items():
             f.write(values+"\n")
     

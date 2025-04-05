@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+
+{% block body %}
+<form class="form" autocomplete="off" action='/login' method="POST" >
+  <div class="create">
+    <a href="/organisator" target="_blank">Organisateur</a>
+  </div>
+
+  <div class="create">
+    <a href="/teamChief" target="_blank">Chef d'équipe</a>
+  </div>
+
+  <div class="create">
+    <a href="/referee" target="_blank">Arbitre</a>
+  </div>
+
+  <div class="create">
+    <a href="/viewer" target="_blank">Spectateur</a>
+  </div>
+
+  <div class="btn block-cube block-cube-hover">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+    <a href="/viewer" target="_blank">Spectateur</a>
+  </div>
+</form>
+{% endblock %}

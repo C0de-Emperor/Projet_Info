@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 from pythonScripts import loginManager as lg
+from pythonScripts import dbManager as dbm
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    return render_template('login.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
