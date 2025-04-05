@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<form class="form" autocomplete="off" action="/createTournament" method="POST">
+<form class="form createTournament" autocomplete="off" action="/createTournament" method="POST">
   <div class="control">
     <h1> 
       {% if isCreating %} 
@@ -13,7 +13,6 @@
       {% else %}
         Modify
       {% endif %}
-      
       Tournament
     </h1>
   </div>
@@ -26,35 +25,35 @@
   <div class="columns">
     <div class="column">
       <div class="control block-cube block-input">
-        <input type="text" name="sport" placeholder="Sport" value={{parametersList[0]}}>
+        <input type="text" name="sport" placeholder="Sport" value="{{ parametersList[0] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="matchDuration" placeholder="Match Duration" value={{parametersList[1]}}>
+        <input type="text" name="matchDuration" placeholder="Match Duration" value="{{ parametersList[1] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="teamSize" placeholder="Team Size" value={{parametersList[2]}}>
+        <input type="text" name="teamSize" placeholder="Team Size" value="{{ parametersList[2] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="availableSportFields" placeholder="Available Sports Fields" value={{parametersList[3]}}>
+        <input type="text" name="availableSportFields" placeholder="Available Sports Fields" value="{{ parametersList[3] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="algorithm" placeholder="Algorithm" value={{parametersList[4]}}>
+        <input type="text" name="algorithm" placeholder="Algorithm" value="{{ parametersList[4] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -63,21 +62,21 @@
 
     <div class="column">
       <div class="control block-cube block-input">
-        <input type="text" name="maxTeamNumber" placeholder="Max Team Number" value={{parametersList[5]}}>
+        <input type="text" name="maxTeamNumber" placeholder="Max Team Number" value="{{ parametersList[5] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="teamSelectionMethod" placeholder="Team Selection Method" value={{parametersList[6]}}>
+        <input type="text" name="teamSelectionMethod" placeholder="Team Selection Method" value="{{ parametersList[6] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="points" placeholder="Points" value={{parametersList[7]}}>
+        <input type="text" name="points" placeholder="Points" value="{{ parametersList[7] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -92,7 +91,7 @@
       </div>
 
       <div class="control block-cube block-input">
-        <input type="password" name="password" placeholder="Password" value={{parametersList[9]}}>
+        <input type="password" name="password" placeholder="Password" value="{{ parametersList[9] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -102,7 +101,7 @@
     </div>
   </div>
 
-  <button class="btn block-cube block-cube-hover" type="submit" value={{parametersList[10]}}>
+  <button class="btn block-cube block-cube-hover" type="submit" value="{{ parametersList[10] }}">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
