@@ -13,7 +13,7 @@ def index():
 @app.route('/orgaLogin', methods=['GET', 'POST'])
 def orgaLogin():
     if request.method == 'POST':
-        databaseId = request.form.get('databaseId')
+        databaseId = request.form.get('tournamentName')
         password = request.form.get('password')
 
         if databaseId == "" :
@@ -22,10 +22,9 @@ def orgaLogin():
             return render_template('orgaLogin.html', error="Password is empty")
 
         if lg.IsLoginCorrect(databaseId, password):
-
-            return render_template("/createTournament", isCreating=False)
+            return render_template("createTournament.html", parametersList=lg.getParamatersList(databaseId), isCreating=False)
         else:
-            return render_template('orgaLogin.html', parametersList=lg.getParamatersList(databaseId), error="Identifiants invalides.")
+            return render_template('orgaLogin.html', error="Identifiants invalides.")
     return render_template('orgaLogin.html')
 
 
@@ -39,7 +38,7 @@ def create():
         for k in inputsNameList:
             tournamentDict[k] = request.form.get(k)
             tournamentList.append(request.form.get(k))
-        tournamentId = request.form.get("tournamentId")
+        tournamentId = request.form.get("tournamentName")
         password = request.form.get("password")
         tournamentList.append(tournamentId)
         tournamentList.append(password)
