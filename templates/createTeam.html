@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Create new Team</title>
+{% endblock %}
+
+{% block body %}
+<form class="form" autocomplete="off" action='/orgaLogin' method="POST" >
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  <div class="control block-cube block-input">
+    <input type="text" name="teamName" placeholder="Team Name">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+
+  <div class="control block-cube block-input">
+    <input type="password" name="password" placeholder="Password">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+</form>
+{% endblock %}

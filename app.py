@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from pythonScripts import loginManager as lg
 from pythonScripts import dbManager as dbm
 
@@ -6,12 +6,12 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def index():
+def Index():
     return render_template('index.html')
 
 
 @app.route('/orgaLogin', methods=['GET', 'POST'])
-def orgaLogin():
+def OrgaLogin():
     if request.method == 'POST':
         databaseId = request.form.get('tournamentName')
         password = request.form.get('password')
@@ -29,7 +29,7 @@ def orgaLogin():
 
 
 @app.route('/createTournament', methods=['GET', 'POST'])
-def create():
+def CreateTournament():
     tournamentList = []
     if request.method == 'POST':
         tournamentDict = {}
@@ -58,14 +58,15 @@ def create():
         except:
             return render_template('createTournament.html', error="Invalid data type", parametersList=tournamentList, isCreating=True)
 
+        #if ... in
+
         if password==None:
             dbm.writeTournamentParameters(tournamentName, tournamentDict)
             return render_template("orgaLogin.html", error="Tournament successfully modified")
 
         if not lg.IsUniqueId(tournamentName):
-            return render_template('createTournament.html', error="Id already taken", parametersList=tournamentList, isCreating=True)
+            return render_template('createTournament.html', error="Id already taken", parametersList=tournamentList, isCreating=True)   #log    
 
-        #if ... in
 
         lg.AddNewLogin(tournamentName, password)
         dbm.createTournament(tournamentName, tournamentDict)
@@ -73,6 +74,15 @@ def create():
         return render_template("orgaLogin.html", error="Tournament successfully created")
         
     return render_template('createTournament.html', parametersList=tournamentList, isCreating=True)
+
+
+@app.route('/createTeam', methods=['GET', 'POST'])
+def CreateTeam ():
+    return render_template("createTeam.html")
+
+@app.route('/chiefTeamLogin', methods=['GET', 'POST'])
+def ChiefTeamLogin ():
+    return render_template("chiefTeamLogin.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
