@@ -1,8 +1,0 @@
-basket, 5min spedup
-40
-5
-1
-a
-2
-a
-3
