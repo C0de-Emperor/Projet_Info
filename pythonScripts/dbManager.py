@@ -8,12 +8,12 @@ createDatabaseInstructions = [
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN);"
     ]
 
-def writeTournamentParameters(tournamentName, tournamentDict):
+def WriteTournamentParameters(tournamentName, tournamentDict):
     with open("databases/tournament"+tournamentName+"Database.txt", "w") as f:
         for (keys, values) in tournamentDict.items():
             f.write(values+"\n")
 
-def createTournament(tournamentName, tournamentDict):
+def CreateTournament(tournamentName, tournamentDict):
     
     f=open("databases/tournament"+tournamentName+"Database.db", "w")
     f.close()
@@ -27,12 +27,12 @@ def createTournament(tournamentName, tournamentDict):
 
     connexion.close()
 
-    writeTournamentParameters(tournamentName, tournamentDict)
+    WriteTournamentParameters(tournamentName, tournamentDict)
     
     return ""
 
 
-def addTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
+def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
 
     for k in range(len(teamPlayers)):
         if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
@@ -56,7 +56,7 @@ def addTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
     return ""
 
 
-def addFields(fieldsList, tournamentName):
+def AddFields(fieldsList, tournamentName):
 
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
@@ -70,7 +70,7 @@ def addFields(fieldsList, tournamentName):
     return ""
 
 
-def addMatches(matchesList, tournamentName):
+def AddMatches(matchesList, tournamentName):
 
     for k in range(len(matchesList)):
         if len(matchesList[k])!=4: return "match n°"+str(k+1)+" has a problem of arguments"
@@ -95,7 +95,7 @@ def addMatches(matchesList, tournamentName):
     return ""
 
 
-def addPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
+def AddPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
 
     if type(matchId)!=int: return "matchId should be an integer"
     if type(playerId)!=int: return "playerId should be an integer"
