@@ -80,9 +80,23 @@ def CreateTournament():
 def CreateTeam ():
     return render_template("createTeam.html")
 
+
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
 def ChiefTeamLogin ():
-    return render_template("chiefTeamLogin.html")
+    tournamentList = []
+    if request.method == 'POST':
+        tournamentDict = {}
+        inputsList = ["tournamentName", "teamName", "password"]
+
+        for k in inputsList:
+            tournamentDict[k] = request.form.get(k)
+            tournamentList.append(request.form.get(k))
+            
+        for (key, value) in tournamentDict.items():
+            if value == "":
+                return render_template("chiefTeamLogin.html", error= key + " is empty", parametersList=tournamentList)
+
+    return render_template("chiefTeamLogin.html", parametersList=tournamentList)
 
 if __name__ == '__main__':
     app.run(debug=True)
