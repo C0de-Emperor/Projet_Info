@@ -31,7 +31,6 @@ def CreateTournament(tournamentName, tournamentDict):
     
     return ""
 
-
 def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
 
     for k in range(len(teamPlayers)):
@@ -55,7 +54,6 @@ def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
 
     return ""
 
-
 def AddFields(fieldsList, tournamentName):
 
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
@@ -68,7 +66,6 @@ def AddFields(fieldsList, tournamentName):
     connexion.close()
 
     return ""
-
 
 def AddMatches(matchesList, tournamentName):
 
@@ -94,7 +91,6 @@ def AddMatches(matchesList, tournamentName):
 
     return ""
 
-
 def AddPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
 
     if type(matchId)!=int: return "matchId should be an integer"
@@ -116,5 +112,25 @@ def AddPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
     connexion.close()
 
     return ""
+
+def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword) -> bool:
+    connexion = sqlite3.connect(databasePath)
+    cursor = connexion.cursor()
+
+    if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamName}" AND password = "{teamPassword}";""").fetchone()[0] <= 0:
+        connexion.close()
+        return False
+
+    connexion.close()
+    return True
+
+
+
+
+
+
+
+
+
 
 

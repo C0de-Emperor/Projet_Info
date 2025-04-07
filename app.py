@@ -83,29 +83,30 @@ def CreateTeam ():
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
 def ChiefTeamLogin ():
-    tournamentList = []
+    teamList = []
     if request.method == 'POST':
-        tournamentDict = {}
+        teamDict = {}
         inputsList = ["tournamentName", "teamName", "password"]
 
         for k in inputsList:
-            tournamentDict[k] = request.form.get(k)
-            tournamentList.append(request.form.get(k))
+            teamDict[k] = request.form.get(k)
+            teamList.append(request.form.get(k))
             
-        for (key, value) in tournamentDict.items():
+        for (key, value) in teamDict.items():
             if value == "":
-                return render_template("chiefTeamLogin.html", error= key + " is empty", parametersList=tournamentList)
+                return render_template("chiefTeamLogin.html", error= key + " is empty", parametersList=teamList)
 
-        if not lg.IsExistingTournament(tournamentDict["tournamentName"]):
-            return render_template("chiefTeamLogin.html", error= "Invalid Tournament Name", parametersList=tournamentList)
+        if not lg.IsExistingTournament(teamDict["tournamentName"]):
+            return render_template("chiefTeamLogin.html", error= "Invalid Tournament Name", parametersList=teamList)
 
+        dbPath = "databases/tournament" + teamDict["refereePassword"] + "Database.db"
+        if not dbm.IsTeamLoginCorrect(dbPath, teamDict["teamName"], teamDict["password"]):
+            render_template("chiefTeamLogin.html", error= "Invalid Password", parametersList=teamList)
 
+        #######
 
+    return render_template("chiefTeamLogin.html", parametersList=teamList)
 
-        parameters = lg.GetParamatersList(tournamentDict["tournamentName"])
-        print(parameters)
-
-    return render_template("chiefTeamLogin.html", parametersList=tournamentList)
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin ():
@@ -122,9 +123,9 @@ def RefereeLogin ():
             if value == "":
                 return render_template("refereeLogin.html", error= key + " is empty", parametersList=tournamentList)
 
-        if lg.getParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
+        if lg.GetParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
             return render_template("referee.html", parametersList=tournamentList)
-
+ 
     return render_template("refereeLogin.html", parametersList=tournamentList)
 
 if __name__ == '__main__':
