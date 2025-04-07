@@ -33,7 +33,7 @@ def IsUniqueId (databaseId:str) -> bool:
     connexion.close()
     return False
 
-def getParamatersList(databaseId):
+def GetParamatersList(databaseId:str):
     tournamentList=[]
     with open("databases/tournament"+databaseId+"Database.txt", "r") as f:
         lines = f.readlines()
@@ -42,3 +42,14 @@ def getParamatersList(databaseId):
     tournamentList.append(databaseId)
 
     return tournamentList
+
+def IsExistingTournament(databaseId:str) -> bool:
+    connexion = sqlite3.connect(dataBasePath)
+    cursor = connexion.cursor()
+
+    if cursor.execute(f"""SELECT count(*) FROM Login WHERE tournamentName = "{databaseId}";""").fetchone()[0] <= 0:
+        connexion.close()
+        return False
+    
+    connexion.close()
+    return True

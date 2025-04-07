@@ -22,7 +22,7 @@ def OrgaLogin():
             return render_template('orgaLogin.html', error="Password is empty")
 
         if lg.IsLoginCorrect(databaseId, password):
-            return render_template("createTournament.html", parametersList=lg.getParamatersList(databaseId), isCreating=False)
+            return render_template("createTournament.html", parametersList=lg.GetParamatersList(databaseId), isCreating=False)
         else:
             return render_template('orgaLogin.html', error="Identifiants invalides.")
     return render_template('orgaLogin.html')
@@ -95,6 +95,15 @@ def ChiefTeamLogin ():
         for (key, value) in tournamentDict.items():
             if value == "":
                 return render_template("chiefTeamLogin.html", error= key + " is empty", parametersList=tournamentList)
+
+        if not lg.IsExistingTournament(tournamentDict["tournamentName"]):
+            return render_template("chiefTeamLogin.html", error= "Invalid Tournament Name", parametersList=tournamentList)
+
+
+
+
+        parameters = lg.GetParamatersList(tournamentDict["tournamentName"])
+        print(parameters)
 
     return render_template("chiefTeamLogin.html", parametersList=tournamentList)
 

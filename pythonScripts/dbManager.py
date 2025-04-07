@@ -1,7 +1,7 @@
 import sqlite3
 
 createDatabaseInstructions = [
-        "CREATE TABLE teams (teamName VARCHAR(50));",
+        "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE players (playerId INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldId INTEGER REFERENCES fields(fieldId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName))",
