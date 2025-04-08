@@ -124,9 +124,19 @@ def RefereeLogin ():
                 return render_template("refereeLogin.html", error= key + " is empty", parametersList=tournamentList)
 
         if lg.GetParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
-            return render_template("referee.html", parametersList=tournamentList)
- 
+            currentMatchesList = dbm.GetMatches(tournamentDict["tournamentName"])
+            return render_template("referee.html", tournamentName=tournamentDict["tournamentName"], matchesList=currentMatchesList)
+
     return render_template("refereeLogin.html", parametersList=tournamentList)
+
+@app.route("/referee", methods=["GET", "POST"])
+def Referee():
+
+    if request.method== "POST":
+        
+
+    return render_template("referee.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
