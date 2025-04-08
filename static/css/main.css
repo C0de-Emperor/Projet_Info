@@ -13,10 +13,6 @@
   visibility: hidden;
 }
 
-.refereeMatchButton{
-  margin-bottom: 20px;
-}
-
   h1 {
     font-size: 23px;
   }
@@ -190,17 +186,30 @@
   .form.createTournament {
     width: 620px;
   }
-  
+
+  .form.createTeam {
+    display: flex;
+    justify-content: center;
+    padding: 64px 15px 24px;
+    margin: 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .createTeam .columns,
   .createTournament .columns {
     display: flex;
     justify-content: space-between;
     gap: 20px;
   }
   
+  .createTeam .column,
   .createTournament .column {
     width: 300px;
   }
   
+  .createTeam .column .control input,
   .createTournament .column .control input {
     width: 100%;
   }

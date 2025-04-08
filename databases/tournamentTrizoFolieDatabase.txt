@@ -1,8 +1,0 @@
-DécompteDesChromosomesDunTrizo
-12
-5
-4
-auto
-13
-auto
-3-2-1

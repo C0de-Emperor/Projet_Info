@@ -77,8 +77,50 @@ def CreateTournament():
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])
-def CreateTeam ():
-    return render_template("createTeam.html")
+def CreateTeam():
+    teamList = []
+    n = 0  # Valeur par défaut de n, si pas encore calculée
+    tournamentName = None
+
+    if request.method == 'POST':
+        action = request.form.get("action")
+
+        teamDict = {}
+        inputsList = ["tournamentName", "teamName", "password"]
+
+        for k in inputsList:
+            teamDict[k] = request.form.get(k)
+            teamList.append(request.form.get(k))
+        
+        if action == "verify":
+            tournamentName = request.form.get("tournamentName")
+            
+            if tournamentName == "":
+                return render_template("createTeam.html", error="Tournament name is empty", n=n, parametersList=teamList, isCreating=True)
+            
+            # Vérification si le tournoi existe dans la base
+            if not lg.IsExistingTournament(tournamentName):
+                return render_template("createTeam.html", error="Invalid Tournament Name", n=n, parametersList=teamList,  isCreating=True)
+            
+            # Récupération du nombre de joueurs par équipe (teamSize)
+            try:
+                n = int(lg.GetParamatersList(tournamentName)[2])  # Index du teamSize
+                return render_template("createTeam.html", parametersList=teamList, n=n, tournamentName=tournamentName, isCreating=True)
+            except:
+                return render_template("createTeam.html", error="Erreur en récupérant la taille d'équipe", n=n, parametersList=teamList, isCreating=True)
+
+        else:
+            # Si l'utilisateur soumet le formulaire, on vérifie si tous les champs sont remplis
+            for (key, value) in teamDict.items():
+                if value == "":
+                    return render_template("createTeam.html", error=key + " is empty", n=n, parametersList=teamList, isCreating=True)
+            
+            # Code pour l'enregistrement de l'équipe, à compléter...
+            # Si tout est valide, tu peux ajouter l'équipe à la base ou faire d'autres actions.
+
+            return render_template("createTeam.html", success="Team successfully created", parametersList=teamList, isCreating=True, n=n)
+
+    return render_template("createTeam.html", isCreating=True, n=n)
 
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
@@ -110,40 +152,23 @@ def ChiefTeamLogin ():
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin ():
-    refereeList = []
+    tournamentList = []
     if request.method == 'POST':
-        refereeDict = {}
+        tournamentDict = {}
         inputsList = ["tournamentName", "refereePassword"]
 
         for k in inputsList:
-            refereeDict[k] = request.form.get(k)
-            refereeList.append(request.form.get(k))
+            tournamentDict[k] = request.form.get(k)
+            tournamentList.append(request.form.get(k))
             
-        for (key, value) in refereeDict.items():
+        for (key, value) in tournamentDict.items():
             if value == "":
-                return render_template("refereeLogin.html", error= key + " is empty", parametersList=refereeList)
+                return render_template("refereeLogin.html", error= key + " is empty", parametersList=tournamentList)
 
-        if lg.GetParamatersList(refereeDict["tournamentName"])[8] == refereeDict["refereePassword"]:
-            currentMatchesList = dbm.GetMatches(refereeDict["tournamentName"])
-            return render_template("referee.html", tournamentName=refereeDict["tournamentName"], matchesList=currentMatchesList)
-
-    return render_template("refereeLogin.html", parametersList=refereeList)
-
-@app.route("/referee", methods=["GET", "POST"])
-def Referee():
-    refereeList=[]
-    if request.method== "POST":
-        refereeDict = {}
-        inputsList = ["tournamentName", "refereePassword"]
-
-        for k in inputsList:
-            refereeDict[k] = request.form.get(k)
-            refereeList.append(request.form.get(k))
-        
-        print(request.form.get("tournamentName"))
-
-    return render_template("referee.html")
-
+        if lg.GetParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
+            return render_template("referee.html", parametersList=tournamentList)
+ 
+    return render_template("refereeLogin.html", parametersList=tournamentList)
 
 if __name__ == '__main__':
     app.run(debug=True)

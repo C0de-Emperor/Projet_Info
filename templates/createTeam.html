@@ -5,23 +5,64 @@
 {% endblock %}
 
 {% block body %}
-<form class="form" autocomplete="off" action='/chiefTeamLogin' method="POST" >
-  {% if error %}
-    <p style="color: red;">{{ error }}</p>
-  {% endif %}
+<form class="form createTeam" autocomplete="off" action='/createTeam' method="POST" >
 
-  <div class="control block-cube block-input">
-    <input type="text" name="teamName" placeholder="Team Name">
-    <div class="bg-top"><div class="bg-inner"></div></div>
-    <div class="bg-right"><div class="bg-inner"></div></div>
-    <div class="bg"><div class="bg-inner"></div></div>
-  </div>
 
-  <div class="control block-cube block-input">
-    <input type="password" name="password" placeholder="Password">
-    <div class="bg-top"><div class="bg-inner"></div></div>
-    <div class="bg-right"><div class="bg-inner"></div></div>
-    <div class="bg"><div class="bg-inner"></div></div>
+  <div class="columns">
+
+    <div class="column">
+    {% if error %}
+      <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    {% if isCreating %}
+      <div class="control block-cube block-input">
+        <input type="text" name="tournamentName" placeholder="Tournament Name" value="{{ parametersList[0] }}">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="control block-cube block-input">
+        <input type="text" name="teamName" placeholder="Team Name" value="{{ parametersList[1] }}">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+    
+      <div class="control block-cube block-input">
+        <input type="password" name="password" placeholder="Password" value="{{ parametersList[2] }}">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <button class="btn block-cube block-cube-hover" name="action" type="submit"  value="verify">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Update Tournament Name</span>
+      </button>
+      {% endif %}
+    </div>
+
+    {% if n %}
+      {% set total = n %}
+      {% set membersPerColumn = 9 %}
+
+      {% for col in range(0, total, membersPerColumn) %}
+      <div class="column">
+        {% set end = (col + membersPerColumn) if (col + membersPerColumn) < total else total %}
+        {% for i in range(col + 1, end + 1) %}
+        <div class="control block-cube block-input">
+          <input type="text" name="teamMember{{ i }}" placeholder="Team member n°{{ i }}">
+          <div class="bg-top"><div class="bg-inner"></div></div>
+          <div class="bg-right"><div class="bg-inner"></div></div>
+          <div class="bg"><div class="bg-inner"></div></div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    {% endif %}
   </div>
 </form>
 {% endblock %}
