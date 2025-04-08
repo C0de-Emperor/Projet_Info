@@ -15,6 +15,7 @@
       <p style="color: red;">{{ error }}</p>
   {% endif %}
 
+  {% if matchesList %}
   {% for k in matchesList %}
   <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit">
     <div class="bg-top"><div class="bg-inner"></div></div>
@@ -27,6 +28,9 @@
     <span class="text"> et {{k[4]}}</span>
   </button>
   {% endfor %}
+  {% else %}
+
+  {% endif %}
 
 </form>
 {% endblock %}

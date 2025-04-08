@@ -144,3 +144,14 @@ def GetMatches(tournamentName):
     connexion.close()
 
     return matchesList
+
+def GetTeamPlayers(tournamentName, teamName):
+    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT * from players WHERE playerTeam = ?", (teamName, ))
+    playersList = cursor.fetchall()
+
+    connexion.close()
+
+    return playersList

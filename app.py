@@ -139,6 +139,8 @@ def Referee():
         for k in inputsList:
             refereeDict[k] = request.form.get(k)
             refereeList.append(request.form.get(k))
+        
+        print(request.form.get("tournamentName"))
 
     return render_template("referee.html")
 
