@@ -110,30 +110,35 @@ def ChiefTeamLogin ():
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin ():
-    tournamentList = []
+    refereeList = []
     if request.method == 'POST':
-        tournamentDict = {}
+        refereeDict = {}
         inputsList = ["tournamentName", "refereePassword"]
 
         for k in inputsList:
-            tournamentDict[k] = request.form.get(k)
-            tournamentList.append(request.form.get(k))
+            refereeDict[k] = request.form.get(k)
+            refereeList.append(request.form.get(k))
             
-        for (key, value) in tournamentDict.items():
+        for (key, value) in refereeDict.items():
             if value == "":
-                return render_template("refereeLogin.html", error= key + " is empty", parametersList=tournamentList)
+                return render_template("refereeLogin.html", error= key + " is empty", parametersList=refereeList)
 
-        if lg.GetParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
-            currentMatchesList = dbm.GetMatches(tournamentDict["tournamentName"])
-            return render_template("referee.html", tournamentName=tournamentDict["tournamentName"], matchesList=currentMatchesList)
+        if lg.GetParamatersList(refereeDict["tournamentName"])[8] == refereeDict["refereePassword"]:
+            currentMatchesList = dbm.GetMatches(refereeDict["tournamentName"])
+            return render_template("referee.html", tournamentName=refereeDict["tournamentName"], matchesList=currentMatchesList)
 
-    return render_template("refereeLogin.html", parametersList=tournamentList)
+    return render_template("refereeLogin.html", parametersList=refereeList)
 
 @app.route("/referee", methods=["GET", "POST"])
 def Referee():
-
+    refereeList=[]
     if request.method== "POST":
-        
+        refereeDict = {}
+        inputsList = ["tournamentName", "refereePassword"]
+
+        for k in inputsList:
+            refereeDict[k] = request.form.get(k)
+            refereeList.append(request.form.get(k))
 
     return render_template("referee.html")
 
