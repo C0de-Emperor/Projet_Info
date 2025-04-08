@@ -145,6 +145,17 @@ def GetMatches(tournamentName):
 
     return matchesList
 
+def GetMatch(tournamentName, matchId):
+    matchesList=GetMatches(tournamentName)
+    print(matchId)
+
+    for k in matchesList:
+        if k[0]==int(matchId):
+            return k
+    
+    return None
+
+
 def GetTeamPlayers(tournamentName, teamName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()

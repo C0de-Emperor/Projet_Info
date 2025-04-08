@@ -8,7 +8,7 @@
 {% block body %}
 <form class="form" autocomplete="off" action='/referee' method="POST" >
   <div class="control">
-    <h1 name="tournamentName"> {{ tournamentName }}</h1>
+    <h1> {{ parametersList[0] }}</h1>
   </div>
   
   {% if error %}
@@ -17,20 +17,62 @@
 
   {% if matchesList %}
   {% for k in matchesList %}
-  <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit">
+  <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="matchButton" value="{{k[0]}}">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
-    <span class="text"> Match n°{{k[0]}}</span>
-    <span class="text"> le {{k[1]}}</span>
-    <span class="text">  sur le terrain {{k[2]}}</span>
-    <span class="text"> opposant {{k[3]}}</span>
-    <span class="text"> et {{k[4]}}</span>
+    <span class="text">Match n°{{k[0]}}</span>
+    <span class="text">le {{k[1]}}</span>
+    <span class="text">sur le terrain {{k[2]}}</span>
+    <span class="text">opposant {{k[3]}}</span>
+    <span class="text">et {{k[4]}}</span>
   </button>
   {% endfor %}
   {% else %}
+  <div class="refereeMatchButton">
+    <span class="text">Match n°{{matchInfos[0]}} le {{matchInfos[1]}} sur le terrain {{matchInfos[2]}} opposant {{matchInfos[3]}} et {{matchInfos[4]}}</span>
+  </div>
 
+    <div class="control block-cube block-input">
+      <input type="text" name="playerId" placeholder="Id du joueur qui a marqué" value="{{ parametersList[2] }}">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <div class="control block-cube block-input">
+      <input type="text" name="pointsScored" placeholder="Nombre de points marqués" value="{{ parametersList[3] }}">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <label class="checkbox-wrapper block-cube block-cube-hover" name="hasTeam1Scored">
+      <div class="bg-top">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg-right">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg">
+        <div class="bg-inner"></div>
+      </div>
+      <input type="checkbox" class="custom-checkbox">
+      <span class="text">{{matchInfos[3]}} ont-ils marqué ?</span>
+    </label>
+    
+    <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="submitPoint" value="1">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+      <span class="text">Enregistrer le point</span>
+    </button>
   {% endif %}
+
+  <div id="changingTournamentInput">
+    <input type="text" name="tournamentName" value="{{ parametersList[0] }}">
+    {% if matchButton %} <input type="text" name="matchButton" value="{{parametersList[1]}}"> {% endif %}
+  </div>
 
 </form>
 {% endblock %}

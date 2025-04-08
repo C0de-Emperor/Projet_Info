@@ -16,14 +16,14 @@
   {% endif %}
 
   <div class="control block-cube block-input">
-    <input type="text" name="tournamentName" placeholder="Tournament Name" value="{{ parametersList[0] }}">
+    <input type="text" name="tournamentName" placeholder="Tournament Name" {% if tournamentName %} value="{{ tournamentName }}" {% endif %}>
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
   </div>
 
   <div class="control block-cube block-input">
-    <input type="password" name="refereePassword" placeholder="Referee's password" value="{{ parametersList[1] }}">
+    <input type="password" name="refereePassword" placeholder="Referee's password">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>

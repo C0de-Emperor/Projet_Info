@@ -152,23 +152,46 @@ def ChiefTeamLogin ():
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin ():
-    tournamentList = []
     if request.method == 'POST':
-        tournamentDict = {}
-        inputsList = ["tournamentName", "refereePassword"]
-
-        for k in inputsList:
-            tournamentDict[k] = request.form.get(k)
-            tournamentList.append(request.form.get(k))
+        refereeDict = {}
+        tournamentName=request.form.get("tournamentName")
+        refereePassword=request.form.get("refereePassword")
             
-        for (key, value) in tournamentDict.items():
-            if value == "":
-                return render_template("refereeLogin.html", error= key + " is empty", parametersList=tournamentList)
+        if tournamentName == "":
+            return render_template("refereeLogin.html", error= "tournamentName is empty")
+        if refereePassword == "":
+            return render_template("refereeLogin.html", error= "refereePassword is empty", tournamentName=tournamentName)
 
-        if lg.GetParamatersList(tournamentDict["tournamentName"])[8] == tournamentDict["refereePassword"]:
-            return render_template("referee.html", parametersList=tournamentList)
+        if lg.GetParamatersList(tournamentName)[8] == refereePassword:
+            currentMatchesList = dbm.GetMatches(tournamentName)
+            return render_template("referee.html", parametersList=[tournamentName], matchesList=currentMatchesList)
+
+    return render_template("refereeLogin.html")
+
+@app.route("/referee", methods=["GET", "POST"])
+def Referee():
+    refereeList=[]
+    if request.method== "POST":
+        refereeList.append(request.form.get("tournamentName"))
+        refereeList.append(request.form.get("matchButton"))
+
+        if request.form.get("submitPoint")=="1":
+            inputsList = ["playerId", "pointsScored", "hasTeam1Scored"]
+
+            for k in inputsList:
+                refereeList.append(request.form.get(k))
+            print(refereeList)
+            
+            for k in range(2,5):
+                if refereeList[k]=="": return render_template("referee.html", error=inputsList[k]+" is empty" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
+
+            
+
+            return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=["", "", "no"])
+        else:
+            return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
  
-    return render_template("refereeLogin.html", parametersList=tournamentList)
+    return render_template("referee.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
