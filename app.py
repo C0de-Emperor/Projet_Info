@@ -191,15 +191,14 @@ def Referee():
             print("PUTAAAIN", refereeList)
             
             for k in range(2,4):
-                if refereeList[k]=="": return render_template("referee.html", error=inputsList[k]+" is empty" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
-            if refereeList[4]==None and refereeList[5]==None: return render_template("referee.html", error="A team needs to have scored" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
+                if refereeList[k]=="": return render_template("referee.html", error=inputsList[k-2]+" is empty" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
+            if refereeList[4]==refereeList[5]: return render_template("referee.html", error="Both teams cant have the same outcome" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
 
             returnValue=dbm.AddPoint(refereeList[0], refereeList[1], refereeList[2], refereeList[3], refereeList[4]=="on")
             if returnValue!="": print(returnValue)
 
             print("koloui")
             return redirect(url_for("Referee", getMethodTournamentName=refereeList[0], getMethodMatchId=refereeList[1]))
-            #return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList[:2])
         else:
             return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
     elif request.method=="GET":
