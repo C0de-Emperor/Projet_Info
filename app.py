@@ -176,21 +176,22 @@ def Referee():
         refereeList.append(request.form.get("matchButton"))
 
         if request.form.get("submitPoint")=="1":
-            inputsList = ["playerId", "pointsScored", "hasTeam1Scored"]
+            inputsList = ["playerId", "pointsScored", "hasTeam1Scored", "hasTeam2Scored"]
 
             for k in inputsList:
                 refereeList.append(request.form.get(k))
-            print(refereeList)
             
-            for k in range(2,5):
+            for k in range(2,4):
                 if refereeList[k]=="": return render_template("referee.html", error=inputsList[k]+" is empty" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
+            if refereeList[4]==None and refereeList[5]==None: return render_template("referee.html", error="A team needs to have scored" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
 
-            
+            dmb.AddPoint(refereeList[1], refereeList[2], refereeList[3], refereeList[4]=="on")
 
-            return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=["", "", "no"])
+            return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList[:2])
+        
         else:
             return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
- 
+
     return render_template("referee.html")
 
 if __name__ == '__main__':

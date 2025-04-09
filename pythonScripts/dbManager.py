@@ -2,7 +2,7 @@ import sqlite3
 
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
-        "CREATE TABLE players (playerId INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
+        "CREATE TABLE players (playerId AUTOINCREMENT INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName))",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN);"
@@ -39,15 +39,10 @@ def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT playerId FROM players ORDER BY playerId DESC;")
-    lastPlayerId = cursor.fetchone()
-    if lastPlayerId == None:
-        lastPlayerId=-1
-
     cursor.execute("INSERT INTO teams VALUES (?)", (teamName,))
 
     for k in range(len(teamPlayers)):
-        cursor.execute("INSERT INTO players VALUES (?, ?, ?, ?, ?)", (lastPlayerId+k+1, teamPlayers[k][0], teamPlayers[k][1], teamName, (k==teamChiefIndex)))
+        cursor.execute("INSERT INTO players(playerName, playerFirstName, playerTeam, isTeamChief) VALUES (?, ?, ?, ?)", (teamPlayers[k][0], teamPlayers[k][1], teamName, (k==teamChiefIndex)))
     connexion.commit()
 
     connexion.close()
@@ -77,14 +72,9 @@ def AddMatches(matchesList, tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT matchId FROM matches ORDER BY matchID DESC;")
-    lastMatchId = cursor.fetchone()
-    if lastMatchId == None:
-        lastMatchId=-1
-
     for k in range(len(matchesList)):
         currentMatch = matchesList[k]
-        cursor.execute("INSERT INTO matches VALUES (?, ?, ?, ?, ?);", (lastMatchId+1+k, currentMatch[0], currentMatch[1], currentMatch[2], currentMatch[3]))
+        cursor.execute("INSERT INTO matches(matchDate, matchFieldName, team1Name, team2Name) VALUES (?, ?, ?, ?);", (currentMatch[0], currentMatch[1], currentMatch[2], currentMatch[3]))
     connexion.commit()
 
     connexion.close()
@@ -101,12 +91,7 @@ def AddPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT pointId FROM points ORDER BY points DESC;")
-    lastPointId = cursor.fetchone()
-    if lastPointId == None:
-        lastPointId=-1
-
-    cursor.execute("INSERT INTO points VALUES (?, ?, ?, ?, ?)", (lastPointId+1, matchId, playerId, numberOfPoints, team1Scored))
+    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored))
     lastPointId+=1
 
     connexion.close()
@@ -137,6 +122,7 @@ def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword) -> bool:
 def GetMatches(tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
+    print(tournamentName)
 
     cursor.execute("SELECT * from matches;")
     matchesList = cursor.fetchall()
