@@ -5,15 +5,16 @@
 {% endblock %}
 
 {% block body %}
+
+
+<div id="createTeamError">
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+</div>
 <form class="form createTeam" autocomplete="off" action='/createTeam' method="POST" >
-
-
   <div class="columns">
-
     <div class="column">
-    {% if error %}
-      <p style="color: red;">{{ error }}</p>
-    {% endif %}
     {% if isCreating %}
       <div class="control block-cube block-input">
         <input type="text" name="tournamentName" placeholder="Tournament Name" value="{{ parametersList[0] }}">
@@ -36,13 +37,21 @@
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
-      <button class="btn block-cube block-cube-hover" name="action" type="submit"  value="verify">
+      <div class="control">
+        <button class="btn block-cube block-cube-hover" name="verify" type="submit"  value="verify">
+          <div class="bg-top"><div class="bg-inner"></div></div>
+          <div class="bg-right"><div class="bg-inner"></div></div>
+          <div class="bg"><div class="bg-inner"></div></div>
+          <span class="text">Update Tournament Name</span>
+        </button>
+      </div>
+      {% endif %}
+      <button class="btn block-cube block-cube-hover" type="submit">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
-        <span class="text">Update Tournament Name</span>
+        <span class="text">Create Team</span>
       </button>
-      {% endif %}
     </div>
 
     {% if n %}
@@ -54,11 +63,29 @@
         {% set end = (col + membersPerColumn) if (col + membersPerColumn) < total else total %}
         {% for i in range(col + 1, end + 1) %}
         <div class="control block-cube block-input">
-          <input type="text" name="teamMember{{ i }}" placeholder="Team member n°{{ i }}">
-          <div class="bg-top"><div class="bg-inner"></div></div>
-          <div class="bg-right"><div class="bg-inner"></div></div>
-          <div class="bg"><div class="bg-inner"></div></div>
+          {% if i == 1 %}
+            <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team Chief Firts Name" value="{{ teamMembers[i][0] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+
+            <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team Chief Last Name" value="{{ teamMembers[i][1] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+          {% else %}
+            <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team member n°{{ i }} Firts Name" value="{{ teamMembers[i][0] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+
+            <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team member n°{{ i }} Last Name" value="{{ teamMembers[i][1] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+          {% endif %}
         </div>
+        
         {% endfor %}
       </div>
       {% endfor %}

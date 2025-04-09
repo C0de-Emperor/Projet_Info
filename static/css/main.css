@@ -13,6 +13,11 @@
   visibility: hidden;
 }
 
+#createTeamError{
+  margin-top: 50px;
+  text-align: center;
+}
+
 .refereeMatchButton{
   margin-bottom: 20px;
 }
@@ -194,7 +199,7 @@
   .form.createTeam {
     display: flex;
     justify-content: center;
-    padding: 64px 15px 24px;
+    padding: 20px 15px 24px;
     margin: 0 auto;
     width: fit-content;
     max-width: 100%;
