@@ -31,7 +31,7 @@ def CreateTournament(tournamentName, tournamentDict):
     
     return ""
 
-def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
+def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex):
 
     for k in range(len(teamPlayers)):
         if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
@@ -49,7 +49,7 @@ def AddTeam(teamName, teamPlayers, teamChiefIndex, tournamentName):
 
     return ""
 
-def AddFields(fieldsList, tournamentName):
+def AddFields(tournamentName, fieldsList):
 
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
@@ -62,7 +62,7 @@ def AddFields(fieldsList, tournamentName):
 
     return ""
 
-def AddMatches(matchesList, tournamentName):
+def AddMatches(tournamentName, matchesList):
 
     for k in range(len(matchesList)):
         if len(matchesList[k])!=4: return "match n°"+str(k+1)+" has a problem of arguments"
@@ -81,18 +81,28 @@ def AddMatches(matchesList, tournamentName):
 
     return ""
 
-def AddPoint(matchId, playerId, numberOfPoints, team1Scored, tournamentName):
+def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
 
-    if type(matchId)!=int: return "matchId should be an integer"
-    if type(playerId)!=int: return "playerId should be an integer"
-    if type(numberOfPoints)!=int: return "numberOfPoints should be an integer"
+    try:
+        matchId=int(matchId)
+    except:
+        return "matchId should be an integer"
+    try:
+        playerId=int(playerId)
+    except:
+        return "playerId should be an integer"
+    try:
+        numberOfPoints=int(numberOfPoints)
+    except:
+        return "numberOfPoints should be an integer"
+    
     if type(team1Scored)!=bool: return "team1Scored should be a boolean"
 
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
     cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored))
-    lastPointId+=1
+    connexion.commit()
 
     connexion.close()
 
@@ -122,7 +132,6 @@ def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword) -> bool:
 def GetMatches(tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
-    print(tournamentName)
 
     cursor.execute("SELECT * from matches;")
     matchesList = cursor.fetchall()
@@ -133,7 +142,6 @@ def GetMatches(tournamentName):
 
 def GetMatch(tournamentName, matchId):
     matchesList=GetMatches(tournamentName)
-    print(matchId)
 
     for k in matchesList:
         if k[0]==int(matchId):

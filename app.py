@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from pythonScripts import loginManager as lg
 from pythonScripts import dbManager as dbm
 
@@ -120,7 +120,7 @@ def CreateTeam():
         if not lg.IsUniqueTeamId(teamList[1], teamList[0]):
             return render_template("createTeam.html", error="Team Name Already Exists", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
-        dbm.AddTeam(teamList[1], teamMembers, 0, teamList[0])
+        dbm.AddTeam(teamList[0], teamList[1], teamMembers, 0)
 
         return render_template("chiefTeamLogin.html", error="Team successfully created", parametersList=[])
 
@@ -183,21 +183,30 @@ def Referee():
 
         if request.form.get("submitPoint")=="1":
             inputsList = ["playerId", "pointsScored", "hasTeam1Scored", "hasTeam2Scored"]
+            print('MAI BORDEL', refereeList)
 
             for k in inputsList:
                 refereeList.append(request.form.get(k))
+
+            print("PUTAAAIN", refereeList)
             
             for k in range(2,4):
                 if refereeList[k]=="": return render_template("referee.html", error=inputsList[k]+" is empty" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
             if refereeList[4]==None and refereeList[5]==None: return render_template("referee.html", error="A team needs to have scored" , matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
 
-            dbm.AddPoint(refereeList[1], refereeList[2], refereeList[3], refereeList[4]=="on")
+            returnValue=dbm.AddPoint(refereeList[0], refereeList[1], refereeList[2], refereeList[3], refereeList[4]=="on")
+            if returnValue!="": print(returnValue)
 
-            return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList[:2])
-        
+            print("koloui")
+            return redirect(url_for("Referee", getMethodTournamentName=refereeList[0], getMethodMatchId=refereeList[1]))
+            #return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList[:2])
         else:
             return render_template("referee.html", matchInfos=dbm.GetMatch(refereeList[0], refereeList[1]), parametersList=refereeList)
-
+    elif request.method=="GET":
+        getMethodTournamentName=request.args.get("getMethodTournamentName")
+        getMethodMatchId=request.args.get("getMethodMatchId")
+        return render_template("referee.html", matchInfos=dbm.GetMatch(getMethodTournamentName, getMethodMatchId), parametersList=[getMethodTournamentName, getMethodMatchId])
+    
     return render_template("referee.html")
 
 if __name__ == '__main__':
