@@ -80,7 +80,7 @@ def CreateTournament():
 def CreateTeam():
     teamList = []
     teamMembers = []
-    n = 0  # Valeur par défaut de n, si pas encore calculée
+    n = 0
 
     if request.method == 'POST':
         action = request.form.get("verify")
@@ -98,33 +98,34 @@ def CreateTeam():
             return render_template("createTeam.html", error="Invalid Tournament Name", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
         try:
-            n = int(lg.GetParamatersList(teamList[0])[2])  # Index du teamSize
+            n = int(lg.GetParamatersList(teamList[0])[2])
         except:
             return render_template("createTeam.html", error="Erreur en récupérant la taille d'équipe", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
-        
-        for i in range(0, n + 1):
+
+        for i in range(n):  # maintenant i de 0 à n-1
             member = [request.form.get(f"teamMemberFirstName{i}"), request.form.get(f"teamMemberLastName{i}")]
             teamMembers.append(member)
 
         if action == "verify":
-            print([["", ""]]*n)
-            return render_template("createTeam.html", parametersList=teamList, n=n, teamMembers=[["", ""]]*(n+1), isCreating=True)
-            
-        else:
-            # Si l'utilisateur soumet le formulaire, on vérifie si tous les champs sont remplis
-            for (key, value) in teamDict.items():
-                if value == "":
-                    return render_template("createTeam.html", error=key + " is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
-            
-            for member in teamMembers:
-                if member == "":
-                    return render_template("createTeam.html", error="A member is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
+            return render_template("createTeam.html", parametersList=teamList, n=n, teamMembers=[["", ""]] * n, isCreating=True)
 
-            dbm.AddTeam(teamList[0], teamMembers, 0, teamList[0])
+        for value in teamDict.values():
+            if value == "":
+                return render_template("createTeam.html", error="One of the inputs is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
-            return render_template("createTeam.html", success="Team successfully created", parametersList=teamList, teamMembers=teamMembers, isCreating=True, n=n)
+        for member in teamMembers:
+            if member[0] == "" or member[1] == "":
+                return render_template("createTeam.html", error="A member is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
+
+        if not lg.IsUniqueTeamId(teamList[1], teamList[0]):
+            return render_template("createTeam.html", error="Team Name Already Exists", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
+
+        dbm.AddTeam(teamList[1], teamMembers, 0, teamList[0])
+
+        return render_template("chiefTeamLogin.html", error="Team successfully created", parametersList=[])
 
     return render_template("createTeam.html", isCreating=True, n=n, teamMembers=teamMembers, parametersList=teamList)
+
 
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])

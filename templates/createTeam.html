@@ -59,35 +59,34 @@
       {% set membersPerColumn = 9 %}
 
       {% for col in range(0, total, membersPerColumn) %}
-      <div class="column">
-        {% set end = (col + membersPerColumn) if (col + membersPerColumn) < total else total %}
-        {% for i in range(col + 1, end + 1) %}
-        <div class="control block-cube block-input">
-          {% if i == 1 %}
-            <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team Chief Firts Name" value="{{ teamMembers[i][0] }}">
-            <div class="bg-top"><div class="bg-inner"></div></div>
-            <div class="bg-right"><div class="bg-inner"></div></div>
-            <div class="bg"><div class="bg-inner"></div></div>
+        <div class="column">
+          {% set end = (col + membersPerColumn) if (col + membersPerColumn) < total else total %}
+          {% for i in range(col, end) %}
+            <div class="control block-cube block-input">
+              {% if i == 0 %}
+                <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team Chief First Name" value="{{ teamMembers[i][0] }}">
+                <div class="bg-top"><div class="bg-inner"></div></div>
+                <div class="bg-right"><div class="bg-inner"></div></div>
+                <div class="bg"><div class="bg-inner"></div></div>
 
-            <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team Chief Last Name" value="{{ teamMembers[i][1] }}">
-            <div class="bg-top"><div class="bg-inner"></div></div>
-            <div class="bg-right"><div class="bg-inner"></div></div>
-            <div class="bg"><div class="bg-inner"></div></div>
-          {% else %}
-            <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team member n°{{ i }} Firts Name" value="{{ teamMembers[i][0] }}">
-            <div class="bg-top"><div class="bg-inner"></div></div>
-            <div class="bg-right"><div class="bg-inner"></div></div>
-            <div class="bg"><div class="bg-inner"></div></div>
+                <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team Chief Last Name" value="{{ teamMembers[i][1] }}">
+                <div class="bg-top"><div class="bg-inner"></div></div>
+                <div class="bg-right"><div class="bg-inner"></div></div>
+                <div class="bg"><div class="bg-inner"></div></div>
+              {% else %}
+                <input type="text" name="teamMemberFirstName{{ i }}" placeholder="Team member n°{{ i + 1 }} First Name" value="{{ teamMembers[i][0] }}">
+                <div class="bg-top"><div class="bg-inner"></div></div>
+                <div class="bg-right"><div class="bg-inner"></div></div>
+                <div class="bg"><div class="bg-inner"></div></div>
 
-            <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team member n°{{ i }} Last Name" value="{{ teamMembers[i][1] }}">
-            <div class="bg-top"><div class="bg-inner"></div></div>
-            <div class="bg-right"><div class="bg-inner"></div></div>
-            <div class="bg"><div class="bg-inner"></div></div>
-          {% endif %}
+                <input type="text" name="teamMemberLastName{{ i }}" placeholder="Team member n°{{ i + 1 }} Last Name" value="{{ teamMembers[i][1] }}">
+                <div class="bg-top"><div class="bg-inner"></div></div>
+                <div class="bg-right"><div class="bg-inner"></div></div>
+                <div class="bg"><div class="bg-inner"></div></div>
+              {% endif %}
+            </div>
+          {% endfor %}
         </div>
-        
-        {% endfor %}
-      </div>
       {% endfor %}
     {% endif %}
   </div>

@@ -53,3 +53,14 @@ def IsExistingTournament(databaseId:str) -> bool:
     
     connexion.close()
     return True
+
+def IsUniqueTeamId (teamId:str, databaseId:str) -> bool:
+    connexion = sqlite3.connect("databases/tournament"+databaseId+"Database.db")
+    cursor = connexion.cursor()
+
+    if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamId}";""").fetchone()[0] <= 0:
+        connexion.close()
+        return True
+
+    connexion.close()
+    return False
