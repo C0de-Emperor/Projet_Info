@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from pythonScripts import loginManager as lg
+from pythonScripts import loginManager as lm
 from pythonScripts import dbManager as dbm
 
 app = Flask(__name__)
@@ -21,8 +21,8 @@ def OrgaLogin():
         if password == "" :
             return render_template('orgaLogin.html', error="Password is empty")
 
-        if lg.IsLoginCorrect(databaseId, password):
-            return render_template("createTournament.html", parametersList=lg.GetParamatersList(databaseId), isCreating=False)
+        if lm.IsLoginCorrect(databaseId, password):
+            return render_template("createTournament.html", parametersList=lm.GetParamatersList(databaseId), isCreating=False)
         else:
             return render_template('orgaLogin.html', error="Identifiants invalides.")
     return render_template('orgaLogin.html')
@@ -33,7 +33,7 @@ def CreateTournament():
     tournamentList = []
     if request.method == 'POST':
         tournamentDict = {}
-        inputsNameList = ["sport", "matchDuration", "teamSize", "availableSportFields", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword"]
+        inputsNameList = ["sport", "matchDuration", "teamSize", "availableSportFields", "almorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword"]
 
         for k in inputsNameList:
             tournamentDict[k] = request.form.get(k)
@@ -64,11 +64,11 @@ def CreateTournament():
             dbm.WriteTournamentParameters(tournamentName, tournamentDict)
             return render_template("orgaLogin.html", error="Tournament successfully modified")
 
-        if not lg.IsUniqueId(tournamentName):
+        if not lm.IsUniqueId(tournamentName):
             return render_template('createTournament.html', error="Id already taken", parametersList=tournamentList, isCreating=True)   #log    
 
 
-        lg.AddNewLogin(tournamentName, password)
+        lm.AddNewLogin(tournamentName, password)
         dbm.CreateTournament(tournamentName, tournamentDict)
 
         return render_template("orgaLogin.html", error="Tournament successfully created")
@@ -94,11 +94,11 @@ def CreateTeam():
         if teamList[0] == "":
             return render_template("createTeam.html", error="Tournament name is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
-        if not lg.IsExistingTournament(teamList[0]):
+        if not lm.IsExistingTournament(teamList[0]):
             return render_template("createTeam.html", error="Invalid Tournament Name", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
         try:
-            n = int(lg.GetParamatersList(teamList[0])[2])
+            n = int(lm.GetParamatersList(teamList[0])[2])
         except:
             return render_template("createTeam.html", error="Erreur en récupérant la taille d'équipe", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
@@ -117,7 +117,7 @@ def CreateTeam():
             if member[0] == "" or member[1] == "":
                 return render_template("createTeam.html", error="A member is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
-        if not lg.IsUniqueTeamId(teamList[1], teamList[0]):
+        if not lm.IsUniqueTeamId(teamList[1], teamList[0]):
             return render_template("createTeam.html", error="Team Name Already Exists", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=True)
 
         dbm.AddTeam(teamList[0], teamList[1], teamMembers, 0)
@@ -143,7 +143,7 @@ def ChiefTeamLogin ():
             if value == "":
                 return render_template("chiefTeamLogin.html", error= key + " is empty", parametersList=teamList)
 
-        if not lg.IsExistingTournament(teamDict["tournamentName"]):
+        if not lm.IsExistingTournament(teamDict["tournamentName"]):
             return render_template("chiefTeamLogin.html", error= "Invalid Tournament Name", parametersList=teamList)
 
         dbPath = "databases/tournament" + teamDict["refereePassword"] + "Database.db"
@@ -167,7 +167,7 @@ def RefereeLogin ():
         if refereePassword == "":
             return render_template("refereeLogin.html", error= "refereePassword is empty", tournamentName=tournamentName)
 
-        if lg.GetParamatersList(tournamentName)[8] == refereePassword:
+        if lm.GetParamatersList(tournamentName)[8] == refereePassword:
             currentMatchesList = dbm.GetMatches(tournamentName)
             return render_template("referee.html", parametersList=[tournamentName], matchesList=currentMatchesList)
 
@@ -207,6 +207,31 @@ def Referee():
         return render_template("referee.html", matchInfos=dbm.GetMatch(getMethodTournamentName, getMethodMatchId), parametersList=[getMethodTournamentName, getMethodMatchId])
     
     return render_template("referee.html")
+
+
+@app.route("/spectatorLogin", methods=["GET", "POST"])
+def spectatorLogin():
+    if request.method == "POST":
+        tournamentName=request.form.get("tournamentName")
+        if lm.IsExistingTournament(tournamentName):
+            return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
+        else:
+            return render_template("spectatorLogin.html", error="unvalid tournament name")
+    return render_template("spectatorLogin.html")
+
+
+@app.route("/spectator", methods=["GET", "POST"])
+def Spectator():
+    spectatorList=[]
+    if request.method == "POST":
+        spectatorList.append(request.form.get("tournamentName"))
+        spectatorList.append(request.form.get("matchButton"))
+
+        print(request.form.get("tournamentName"))
+        
+        return render_template("spectator.html", parametersList=spectatorList, points=dbm.GetPoints(spectatorList[0], spectatorList[1]))
+    return render_template("spectator.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
