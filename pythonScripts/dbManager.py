@@ -31,7 +31,7 @@ def CreateTournament(tournamentName, tournamentDict):
     
     return ""
 
-def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex):
+def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex, password):
 
     for k in range(len(teamPlayers)):
         if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
@@ -39,7 +39,7 @@ def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO teams VALUES (?)", (teamName,))
+    cursor.execute("INSERT INTO teams VALUES (?, ?)", (teamName, password))
 
     for k in range(len(teamPlayers)):
         cursor.execute("INSERT INTO players(playerName, playerFirstName, playerTeam, isTeamChief) VALUES (?, ?, ?, ?)", (teamPlayers[k][0], teamPlayers[k][1], teamName, (k==teamChiefIndex)))
@@ -108,21 +108,19 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
 
     return ""
 
-def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword) -> bool:
+def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword:str) -> bool:
     connexion = sqlite3.connect(databasePath)
     cursor = connexion.cursor()
 
-    if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamName}" AND password = "{teamPassword}";""").fetchone()[0] <= 0:
+    if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamName}" AND teamPassword = "{teamPassword}";""").fetchone()[0] <= 0:
         connexion.close()
         return False
 
     connexion.close()
     return True
 
-
-
-
-
+def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str, teamChiefIndex:int):
+    pass
 
 
 
@@ -148,7 +146,6 @@ def GetMatch(tournamentName, matchId):
             return k
     
     return None
-
 
 def GetTeamPlayers(tournamentName, teamName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
