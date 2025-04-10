@@ -50,8 +50,19 @@
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
-        <span class="text">Create Team</span>
+        <span class="text">{% if isCreating %} 
+          Create 
+        {% else %}
+          Modify
+        {% endif %}
+        Team</span>
       </button>
+      {% if not isCreating %}
+        <div id="changingTeamInput">
+          <input type="text" name="tournamentName" value="{{parametersList[0]}}">
+          <input type="text" name="teamName" value="{{parametersList[1]}}">
+        </div>
+      {% endif %}
     </div>
 
     {% if n %}
