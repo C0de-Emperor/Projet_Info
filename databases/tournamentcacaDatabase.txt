@@ -1,0 +1,9 @@
+basket
+40
+5
+1
+auto
+4
+auto
+3-1-0
+caca

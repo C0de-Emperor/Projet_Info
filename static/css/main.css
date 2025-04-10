@@ -9,11 +9,10 @@
     letter-spacing: 0.05em;
   }
 
-  /*
 #changingTeamInput,
 #changingTournamentInput{
   visibility: hidden;
-}*/
+}
 
 #createTeamError{
   margin-top: 50px;

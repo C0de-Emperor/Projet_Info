@@ -11,6 +11,7 @@ createDatabaseInstructions = [
 def WriteTournamentParameters(tournamentName, tournamentDict):
     with open("databases/tournament"+tournamentName+"Database.txt", "w") as f:
         for (keys, values) in tournamentDict.items():
+            print(tournamentDict)
             f.write(values+"\n")
 
 def CreateTournament(tournamentName, tournamentDict):
@@ -119,13 +120,18 @@ def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword:str) -> boo
     connexion.close()
     return True
 
-def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str, teamChiefIndex:int):
-    pass
+def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
+    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    cursor = connexion.cursor()
 
+    cursor.execute("SELECT MIN(playerId) FROM players WHERE playerTeam=?", (teamName, ))
+    minPlayerId=cursor.fetchone()[0]
 
+    for k in range(len(teamPlayers)):
+        cursor.execute("UPDATE players SET playerName=?, playerFirstName=? WHERE playerTeam=? AND playerId=?", (teamPlayers[k][0], teamPlayers[k][1], teamName, minPlayerId+k))
+    connexion.commit()
 
-
-
+    connexion.close()
 
 def GetMatches(tournamentName):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
