@@ -1,11 +1,11 @@
-import sqlite3
+import sqlite3, datetime
 
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
         "CREATE TABLE players (playerId AUTOINCREMENT INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName))",
-        "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN);"
+        "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN, dateOfPointSubmit DATETIME);"
     ]
 
 def WriteTournamentParameters(tournamentName, tournamentDict):
@@ -101,7 +101,7 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
     connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored))
+    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored, datetime.datetime))
     connexion.commit()
 
     connexion.close()
@@ -157,3 +157,24 @@ def GetTeamPlayers(tournamentName, teamName):
     connexion.close()
 
     return playersList
+
+def GetPoints(tournamentName, matchId):
+    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT * FROM points WHERE matchId = ?", (matchId, ))
+    pointsList = cursor.fetchall()
+
+    newPointsList=[]
+    for k in pointsList:
+        cursor.execute("SELECT playerName, playerFirstName FROM players WHERE playerId=?;", (k[2],))
+        playerInfos=cursor.fetchone()
+
+        cursor.execute("SELECT team1Name, team2Name FROM matches WHERE matchId = ?", (matchId, ))
+        teamsNames=cursor.fetchall()
+
+        newPointsList.append(list(playerInfos)+[k[3], teamsNames[0][not(k[4])], k[5]])
+
+    connexion.close()
+
+    return newPointsList

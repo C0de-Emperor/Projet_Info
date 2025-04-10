@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+
+{% block body %}
+<form class="form" autocomplete="off" action='/spectator' method="POST" >
+  <div class="control">
+    <h1> {{ parametersList[0] }}</h1>
+    {% if parametersList[1] %} <h3> Match n°{{parametersList[1]}}</h3> {% endif %}
+  </div>
+  
+  {% if error %}
+      <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  {% if matchesList %}
+  {% for k in matchesList %}
+  <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="matchButton" value="{{k[0]}}">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+    <span class="text">Match n°{{k[0]}}</span>
+    <span class="text">le {{k[1]}}</span>
+    <span class="text">sur le terrain {{k[2]}}</span>
+    <span class="text">opposant {{k[3]}}</span>
+    <span class="text">et {{k[4]}}</span>
+  </button>
+  {% endfor %}
+  {% else %}
+  
+  {% for k in points %}
+  <div class="control">
+    <label>{{k[1]}} {{k[0]}} de {{k[3]}} a marqué {{k[2]}} points à {{k[4]}}</label>
+  </div>
+  {% endfor %}
+
+  {% endif %}
+
+  <div id="changingTournamentInput">
+    <input type="text" name="tournamentName" value="{{ parametersList[0] }}">
+    {% if parametersList[1] %} <input type="text" name="matchButton" value="{{parametersList[1]}}"> {% endif %}
+  </div>
+
+</form>
+{% endblock %}
