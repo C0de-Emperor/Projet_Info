@@ -13,22 +13,22 @@ def Index():
 @app.route('/orgaLogin', methods=['GET', 'POST'])
 def OrgaLogin():
     if request.method == 'POST':
-        tournamentName = request.form.get('tournamentName', '').strip()
-        password = request.form.get('password', '').strip()
+        tournamentName = request.form.get('tournamentName')
+        password = request.form.get('password')
 
-        # 🛑 Champs vides
+        # Champs vides
         if not tournamentName:
             return render_template('orgaLogin.html', error="Tournament name is empty")
 
         if not password:
             return render_template('orgaLogin.html', error="Password is empty")
 
-        # ✅ Identifiants corrects
+        # Identifiants corrects
         if lm.IsLoginCorrect(tournamentName, password):
             parametersList = lm.GetParamatersList(tournamentName)
             return render_template("createTournament.html", parametersList=parametersList, isCreating=False)
 
-        # ❌ Échec login
+        # Échec login
         return render_template('orgaLogin.html', error="Invalid credentials")
 
     # GET method
@@ -48,21 +48,22 @@ def CreateTournament():
         ]
 
         for key in inputNames:
-            value = request.form.get(key, "").strip()
+            value = request.form.get(key)
             tournamentDict[key] = value
             tournamentList.append(value)
 
-        tournamentName = request.form.get("tournamentName", "").strip()
-        password = request.form.get("password", "").strip()
+        tournamentName = request.form.get("tournamentName")
+        password = request.form.get("password")
 
         tournamentList.append(tournamentName)
         tournamentList.append(password)
 
         # Check si c'est une modification (pas de mot de passe) ou une création
+        print(password)
         if password == None:
             creatingState = False
 
-        # 🛑 Nom invalide
+        # Nom invalide
         if " " in tournamentName or tournamentName == "":
             return render_template(
                 'createTournament.html',
@@ -71,7 +72,7 @@ def CreateTournament():
                 isCreating=creatingState
             )
 
-        # 🛑 Champs vides
+        # Champs vides
         for key, value in tournamentDict.items():
             if value == "":
                 return render_template(
@@ -81,7 +82,7 @@ def CreateTournament():
                     isCreating=creatingState
                 )
 
-        # 🛑 Vérif type numérique
+        # Vérif type numérique
         try:
             int(tournamentDict["matchDuration"])
             int(tournamentDict["teamSize"])
@@ -95,12 +96,12 @@ def CreateTournament():
                 isCreating=creatingState
             )
 
-        # ✔️ MODIFICATION
+        # MODIFICATION
         if password == None:
             dbm.WriteTournamentParameters(tournamentName, tournamentDict)
             return render_template("orgaLogin.html", error="Tournament successfully modified")
 
-        # 🛑 ID déjà pris
+        # ID déjà pris
         if not lm.IsUniqueId(tournamentName):
             return render_template(
                 'createTournament.html',
@@ -109,7 +110,7 @@ def CreateTournament():
                 isCreating=creatingState
             )
 
-        # ✔️ CRÉATION
+        # CRÉATION
         lm.AddNewLogin(tournamentName, password)
         dbm.CreateTournament(tournamentName, tournamentDict)
 
@@ -129,9 +130,9 @@ def CreateTeam():
     if request.method == 'POST':
         # Récupération des valeurs principales
         teamDict = {
-            "tournamentName": request.form.get("tournamentName", "").strip(),
-            "teamName": request.form.get("teamName", "").strip(),
-            "password": request.form.get("password", "").strip() or None
+            "tournamentName": request.form.get("tournamentName"),
+            "teamName": request.form.get("teamName"),
+            "password": request.form.get("password")
         }
 
         teamList = [teamDict["tournamentName"], teamDict["teamName"]]
@@ -155,8 +156,8 @@ def CreateTeam():
 
         # Construction de la liste des membres
         for i in range(n):  # i de 0 à n-1
-            first_name = request.form.get(f"teamMemberFirstName{i}", "").strip()
-            last_name = request.form.get(f"teamMemberLastName{i}", "").strip()
+            first_name = request.form.get(f"teamMemberFirstName{i}")
+            last_name = request.form.get(f"teamMemberLastName{i}")
             teamMembers.append([first_name, last_name])
 
         action = request.form.get("verify")
@@ -199,9 +200,9 @@ def ChiefTeamLogin():
     if request.method == 'POST':
         # Récupération des champs
         teamDict = {
-            "tournamentName": request.form.get("tournamentName", "").strip(),
-            "teamName": request.form.get("teamName", "").strip(),
-            "password": request.form.get("password", "").strip()
+            "tournamentName": request.form.get("tournamentName"),
+            "teamName": request.form.get("teamName"),
+            "password": request.form.get("password")
         }
         teamList = list(teamDict.values())
 
@@ -232,8 +233,8 @@ def ChiefTeamLogin():
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin():
     if request.method == 'POST':
-        tournamentName = request.form.get("tournamentName", "").strip()
-        refereePassword = request.form.get("refereePassword", "").strip()
+        tournamentName = request.form.get("tournamentName")
+        refereePassword = request.form.get("refereePassword")
 
         # Validation des champs
         if not tournamentName:
@@ -267,8 +268,8 @@ def Referee():
 
         # Redirige si un score est soumis
         if submit_point == "1":
-            playerId = request.form.get("playerId", "").strip()
-            pointsScored = request.form.get("pointsScored", "").strip()
+            playerId = request.form.get("playerId")
+            pointsScored = request.form.get("pointsScored")
             hasTeam1Scored = request.form.get("hasTeam1Scored")
             hasTeam2Scored = request.form.get("hasTeam2Scored")
 
