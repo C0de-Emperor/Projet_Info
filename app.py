@@ -12,24 +12,32 @@ def Index():
 
 @app.route('/orgaLogin', methods=['GET', 'POST'])
 def OrgaLogin():
+    tournamentList = []
+    tournamentDict = {}
     if request.method == 'POST':
-        tournamentName = request.form.get('tournamentName')
-        password = request.form.get('password')
+        inputNames = [
+            "password", "tournamentName"
+        ]
+
+        for key in inputNames:
+            value = request.form.get(key)
+            tournamentDict[key] = value
+            tournamentList.append(value)
 
         # Champs vides
-        if not tournamentName:
-            return render_template('orgaLogin.html', error="Tournament name is empty")
+        if tournamentDict["tournamentName"] == "":
+            return render_template('orgaLogin.html', error="Tournament name is empty", parametersList=tournamentList)
 
-        if not password:
-            return render_template('orgaLogin.html', error="Password is empty")
+        if tournamentDict["password"] == "":
+            return render_template('orgaLogin.html', error="Password is empty", parametersList=tournamentList)
 
         # Identifiants corrects
-        if lm.IsLoginCorrect(tournamentName, password):
-            parametersList = lm.GetParamatersList(tournamentName)
-            return render_template("createTournament.html", parametersList=parametersList, isCreating=False)
+        if lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
+            parametersList = lm.GetParamatersList(tournamentDict["tournamentName"])
+            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, accessibility=parametersList[11])
 
         # Échec login
-        return render_template('orgaLogin.html', error="Invalid credentials")
+        return render_template('orgaLogin.html', error="Invalid credentials", parametersList=tournamentList)
 
     # GET method
     return render_template('orgaLogin.html')
@@ -38,13 +46,16 @@ def OrgaLogin():
 @app.route('/createTournament', methods=['GET', 'POST'])
 def CreateTournament():
     tournamentList = []
-    creatingState = True
+    tournamentDict = {}
+    
+    creatingState = request.form.get('creatingValue') == 'True'
+    print(creatingState)
+    accessibility = request.form.get("tournamentAccessibilityState") == 'True'
 
     if request.method == 'POST':
-        tournamentDict = {}
         inputNames = [
             "sport", "matchDuration", "teamSize", "availableSportFields",
-            "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword"
+            "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "password", "tournamentName"
         ]
 
         for key in inputNames:
@@ -52,19 +63,8 @@ def CreateTournament():
             tournamentDict[key] = value
             tournamentList.append(value)
 
-        tournamentName = request.form.get("tournamentName")
-        password = request.form.get("password")
-
-        tournamentList.append(tournamentName)
-        tournamentList.append(password)
-
-        # Check si c'est une modification (pas de mot de passe) ou une création
-        print(password)
-        if password == None:
-            creatingState = False
-
         # Nom invalide
-        if " " in tournamentName or tournamentName == "":
+        if " " in tournamentDict['tournamentName'] or tournamentDict['tournamentName'] == "":
             return render_template(
                 'createTournament.html',
                 error="The tournament name must not contain spaces or be empty.",
@@ -95,14 +95,35 @@ def CreateTournament():
                 parametersList=tournamentList,
                 isCreating=creatingState
             )
+        
+        if tournamentDict['tournamentName'] == tournamentDict['refereePassword']:
+            return render_template(
+                'createTournament.html',
+                error="Invalid Passwords: referee password and tournament password cant't be equal",
+                parametersList=tournamentList,
+                isCreating=creatingState
+            )
+        
+        if accessibility == False:
+            return render_template(
+                'createTournament.html',
+                error="Tournament in progress cannot be modified.",
+                parametersList=tournamentList,
+                isCreating=creatingState
+            )
 
         # MODIFICATION
-        if password == None:
-            dbm.WriteTournamentParameters(tournamentName, tournamentDict)
-            return render_template("orgaLogin.html", error="Tournament successfully modified")
+        if not creatingState:
+            action = request.form.get("action")
+            if action == "close":
+                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], tournamentDict, False)
+                return render_template("orgaLogin.html", error="Tournament successfully started", parametersList=[])
+            else:
+                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], tournamentDict, True)
+                return render_template("orgaLogin.html", error="Tournament successfully modified", parametersList=[])
 
         # ID déjà pris
-        if not lm.IsUniqueId(tournamentName):
+        if not lm.IsUniqueId(tournamentDict['tournamentName']):
             return render_template(
                 'createTournament.html',
                 error="Tournament name is already taken.",
@@ -111,13 +132,13 @@ def CreateTournament():
             )
 
         # CRÉATION
-        lm.AddNewLogin(tournamentName, password)
-        dbm.CreateTournament(tournamentName, tournamentDict)
+        lm.AddNewLogin(tournamentDict['tournamentName'], tournamentDict['password'])
+        dbm.CreateTournament(tournamentDict['tournamentName'], tournamentDict)
 
-        return render_template("orgaLogin.html", error="Tournament successfully created")
+        return render_template("orgaLogin.html", error="Tournament successfully created", parametersList=[])
 
     # GET
-    return render_template('createTournament.html', parametersList=tournamentList, isCreating=creatingState)
+    return render_template('createTournament.html', parametersList=tournamentList, isCreating=creatingState, accessibility=accessibility)
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])
@@ -347,7 +368,7 @@ def Spectator():
         spectatorList.append(request.form.get("tournamentName"))
         spectatorList.append(request.form.get("matchButton"))
 
-        print(request.form.get("tournamentName"))
+        #sprint(request.form.get("tournamentName"))
         
         return render_template("spectator.html", parametersList=spectatorList, points=dbm.GetPoints(spectatorList[0], spectatorList[1]))
     return render_template("spectator.html")

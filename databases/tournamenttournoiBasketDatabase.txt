@@ -1,9 +1,1 @@
-basket
-40
-5
-1
-auto
-4
-auto
-3-1-0
-caca
+Basket%Separator%40%Separator%5%Separator%10%Separator%auto%Separator%7%Separator%auto%Separator%3-2-1%Separator%password%Separator%Password%Separator%tournoiBasket%Separator%True%Separator%

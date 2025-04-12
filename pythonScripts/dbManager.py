@@ -2,18 +2,19 @@ import sqlite3, datetime
 
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
-        "CREATE TABLE players (playerId AUTOINCREMENT INTEGER PRIMARY KEY, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
+        "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName))",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN, dateOfPointSubmit DATETIME);"
     ]
 
-def WriteTournamentParameters(tournamentName, tournamentDict):
+def WriteTournamentParameters(tournamentName:str, tournamentDict, tournamentAccessibilityState:bool):
+    separator = "%Separator%"
     with open("databases/tournament"+tournamentName+"Database.txt", "w") as f:
         for (keys, values) in tournamentDict.items():
-            print(tournamentDict)
-            f.write(values+"\n")
-
+            f.write(values + separator)
+        f.write(str(tournamentAccessibilityState) + separator)
+    
 def CreateTournament(tournamentName, tournamentDict):
     
     f=open("databases/tournament"+tournamentName+"Database.db", "w")
@@ -28,7 +29,7 @@ def CreateTournament(tournamentName, tournamentDict):
 
     connexion.close()
 
-    WriteTournamentParameters(tournamentName, tournamentDict)
+    WriteTournamentParameters(tournamentName, tournamentDict, True)
     
     return ""
 

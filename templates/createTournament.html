@@ -91,28 +91,30 @@
 
       {% if isCreating %}
       <div class="control block-cube block-input">
-        <input type="text" name="tournamentName" placeholder="Tournament Name" value={{parametersList[9]}}>
+        <input type="text" name="tournamentName" placeholder="Tournament Name" value={{parametersList[10]}}>
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="password" name="password" placeholder="Password" value="{{ parametersList[10]}}">
+        <input type="password" name="password" placeholder="Password" value="{{ parametersList[9]}}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
       {% else %}
-      <div id="changingTournamentInput">
-        <input type="text" name="tournamentName" value="{{parametersList[8]}}">
-      </div>
+      <button class="btn block-cube block-cube-hover" type="submit" name="action" value="close">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Start Tournament</span>
+      </button>
       {% endif %}
-
     </div>
   </div>
 
-  <button class="btn block-cube block-cube-hover" type="submit" value="{{ parametersList[10] }}">
+  <button class="btn block-cube block-cube-hover" type="submit">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
@@ -125,5 +127,15 @@
 
     </span>
   </button>
+  <div id="changingTournamentInput">
+    <input type="text" name="tournamentAccessibilityState" value="{{accessibility}}">
+  </div>
+  {% if not isCreating %}
+    <div id="changingTournamentInput">
+      <input type="text" name="tournamentName" value="{{parametersList[10]}}">
+      <input type="text" name="password" value="{{parametersList[9]}}">
+      <input type="text" name="creatingValue" value="{{isCreating}}">
+    </div>
+  {% endif %}
 </form>
 {% endblock %}
