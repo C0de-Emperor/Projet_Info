@@ -34,7 +34,7 @@ def OrgaLogin():
         # Identifiants corrects
         if lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
             parametersList = lm.GetParamatersList(tournamentDict["tournamentName"])
-            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, accessibility=parametersList[11])
+            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, accessibility=parametersList[10])
 
         # Échec login
         return render_template('orgaLogin.html', error="Invalid credentials", parametersList=tournamentList)
@@ -48,9 +48,15 @@ def CreateTournament():
     tournamentList = []
     tournamentDict = {}
     
-    creatingState = request.form.get('creatingValue') == 'True'
-    print(creatingState)
-    accessibility = request.form.get("tournamentAccessibilityState") == 'True'
+    if(request.form.get('creatingValue') != None):
+        creatingState = request.form.get('creatingValue') == 'True'
+    else:
+        creatingState = True
+    
+    if(request.form.get('tournamentAccessibilityState') != None):
+        accessibility = request.form.get('tournamentAccessibilityState') == 'True'
+    else:
+        accessibility = True
 
     if request.method == 'POST':
         inputNames = [
@@ -69,7 +75,8 @@ def CreateTournament():
                 'createTournament.html',
                 error="The tournament name must not contain spaces or be empty.",
                 parametersList=tournamentList,
-                isCreating=creatingState
+                isCreating=creatingState,
+                accessibility=accessibility
             )
 
         # Champs vides
@@ -79,7 +86,8 @@ def CreateTournament():
                     "createTournament.html",
                     error=f"{key} is empty",
                     parametersList=tournamentList,
-                    isCreating=creatingState
+                    isCreating=creatingState,
+                    accessibility=accessibility
                 )
 
         # Vérif type numérique
@@ -93,15 +101,17 @@ def CreateTournament():
                 'createTournament.html',
                 error="Invalid data type: matchDuration, teamSize, availableSportFields, and maxTeamNumber must be integers.",
                 parametersList=tournamentList,
-                isCreating=creatingState
+                isCreating=creatingState,
+                accessibility=accessibility
             )
         
-        if tournamentDict['tournamentName'] == tournamentDict['refereePassword']:
+        if lm.GetPassword(tournamentDict['tournamentName']) == tournamentDict['refereePassword']:
             return render_template(
                 'createTournament.html',
                 error="Invalid Passwords: referee password and tournament password cant't be equal",
                 parametersList=tournamentList,
-                isCreating=creatingState
+                isCreating=creatingState,
+                accessibility=accessibility
             )
         
         if accessibility == False:
@@ -109,17 +119,38 @@ def CreateTournament():
                 'createTournament.html',
                 error="Tournament in progress cannot be modified.",
                 parametersList=tournamentList,
-                isCreating=creatingState
+                isCreating=creatingState,
+                accessibility=accessibility
             )
 
         # MODIFICATION
         if not creatingState:
             action = request.form.get("action")
             if action == "close":
-                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], tournamentDict, False)
+                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], 
+                                              tournamentDict['sport'],
+                                              tournamentDict['matchDuration'],
+                                              tournamentDict['teamSize'],
+                                              tournamentDict['availableSportFields'],
+                                              tournamentDict['algorithm'],
+                                              tournamentDict['maxTeamNumber'],
+                                              tournamentDict['teamSelectionMethod'],
+                                              tournamentDict['points'],
+                                              tournamentDict['refereePassword'],
+                                              False)
                 return render_template("orgaLogin.html", error="Tournament successfully started", parametersList=[])
             else:
-                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], tournamentDict, True)
+                dbm.WriteTournamentParameters(tournamentDict['tournamentName'], 
+                                              tournamentDict['sport'],
+                                              tournamentDict['matchDuration'],
+                                              tournamentDict['teamSize'],
+                                              tournamentDict['availableSportFields'],
+                                              tournamentDict['algorithm'],
+                                              tournamentDict['maxTeamNumber'],
+                                              tournamentDict['teamSelectionMethod'],
+                                              tournamentDict['points'],
+                                              tournamentDict['refereePassword'],
+                                              True)
                 return render_template("orgaLogin.html", error="Tournament successfully modified", parametersList=[])
 
         # ID déjà pris
@@ -133,7 +164,7 @@ def CreateTournament():
 
         # CRÉATION
         lm.AddNewLogin(tournamentDict['tournamentName'], tournamentDict['password'])
-        dbm.CreateTournament(tournamentDict['tournamentName'], tournamentDict)
+        dbm.CreateTournament(tournamentDict['tournamentName'], tournamentDict, accessibility)
 
         return render_template("orgaLogin.html", error="Tournament successfully created", parametersList=[])
 

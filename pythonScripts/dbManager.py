@@ -1,5 +1,7 @@
 import sqlite3, datetime
 
+separator = "%Separator%"
+
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
         "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
@@ -8,14 +10,14 @@ createDatabaseInstructions = [
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN, dateOfPointSubmit DATETIME);"
     ]
 
-def WriteTournamentParameters(tournamentName:str, tournamentDict, tournamentAccessibilityState:bool):
-    separator = "%Separator%"
+def WriteTournamentParameters(tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
+    tournamentAccessibilityState = str(tournamentAccessibilityState)
     with open("databases/tournament"+tournamentName+"Database.txt", "w") as f:
-        for (keys, values) in tournamentDict.items():
-            f.write(values + separator)
-        f.write(str(tournamentAccessibilityState) + separator)
-    
-def CreateTournament(tournamentName, tournamentDict):
+        for param in [_sport, _duration, _teamSize, _terrain, _algo, _maxTeam, _selection, _points, _refP, tournamentName, tournamentAccessibilityState]:
+            print([param])
+            f.write(param + separator)
+
+def CreateTournament(tournamentName, tournamentDict, access:str):
     
     f=open("databases/tournament"+tournamentName+"Database.db", "w")
     f.close()
@@ -28,10 +30,17 @@ def CreateTournament(tournamentName, tournamentDict):
     connexion.commit()
 
     connexion.close()
-
-    WriteTournamentParameters(tournamentName, tournamentDict, True)
-    
-    return ""
+    WriteTournamentParameters(tournamentDict['tournamentName'], 
+                                  tournamentDict['sport'],
+                                  tournamentDict['matchDuration'],
+                                tournamentDict['teamSize'],
+                                tournamentDict['availableSportFields'],
+                                tournamentDict['algorithm'],
+                                tournamentDict['maxTeamNumber'],
+                                tournamentDict['teamSelectionMethod'],
+                                tournamentDict['points'],
+                                tournamentDict['refereePassword'],
+                                access)
 
 def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex, password):
 

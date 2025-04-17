@@ -34,19 +34,18 @@ def IsUniqueId (databaseId:str) -> bool:
     return False
 
 def GetParamatersList(databaseId: str):
-    connexion = sqlite3.connect(dataBasePath)
-    cursor = connexion.cursor()
-
     with open("databases/tournament" + databaseId + "Database.txt", "r") as f:
         content = f.read().strip()
         # On sépare les paramètres selon le séparateur personnalisé
         parameters = content.split("%Separator%")
 
-        password = cursor.execute(f"""Select password from Login where tournamentName = "{databaseId}";""").fetchone()[0]
-        if not password == parameters[9]:
-            parameters.insert(9, password)
-    
     return parameters[:-1]
+
+def GetPassword(databaseId: str):
+    connexion = sqlite3.connect(dataBasePath)
+    cursor = connexion.cursor()
+    password = cursor.execute(f"""Select password from Login where tournamentName = "{databaseId}";""").fetchone()[0]
+    return password
 
 def IsExistingTournament(databaseId:str) -> bool:
     connexion = sqlite3.connect(dataBasePath)
