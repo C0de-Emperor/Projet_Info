@@ -12,17 +12,17 @@ createDatabaseInstructions = [
 
 def WriteTournamentParameters(tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
     tournamentAccessibilityState = str(tournamentAccessibilityState)
-    with open("databases/tournament"+tournamentName+"Database.txt", "w") as f:
+    with open("databases/"+tournamentName+".txt", "w") as f:
         for param in [_sport, _duration, _teamSize, _terrain, _algo, _maxTeam, _selection, _points, _refP, tournamentName, tournamentAccessibilityState]:
             print([param])
             f.write(param + separator)
 
 def CreateTournament(tournamentName, tournamentDict, access:str):
     
-    f=open("databases/tournament"+tournamentName+"Database.db", "w")
+    f=open("databases/"+tournamentName+".db", "w")
     f.close()
 
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     for k in createDatabaseInstructions:
@@ -47,7 +47,7 @@ def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex, password):
     for k in range(len(teamPlayers)):
         if len(teamPlayers[k])!=2: return "player n°"+str(k+1)+" has a problem of arguments"
 
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("INSERT INTO teams VALUES (?, ?)", (teamName, password))
@@ -62,7 +62,7 @@ def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex, password):
 
 def AddFields(tournamentName, fieldsList):
 
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     for k in fieldsList:
@@ -80,7 +80,7 @@ def AddMatches(tournamentName, matchesList):
         if type(matchesList[k][0])!=str: return "the date of match n°"+str(k+1)+" should be a string"
         if type(matchesList[k][1])!=int: return "the fieldNumber of n°"+str(k+1)+" should be an integer"
 
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     for k in range(len(matchesList)):
@@ -109,7 +109,7 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
     
     if type(team1Scored)!=bool: return "team1Scored should be a boolean"
 
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored, datetime.datetime))
@@ -131,7 +131,7 @@ def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword:str) -> boo
     return True
 
 def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT MIN(playerId) FROM players WHERE playerTeam=?", (teamName, ))
@@ -144,7 +144,7 @@ def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
     connexion.close()
 
 def GetMatches(tournamentName):
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT * from matches;")
@@ -164,7 +164,7 @@ def GetMatch(tournamentName, matchId):
     return None
 
 def GetTeamPlayers(tournamentName, teamName):
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT * from players WHERE playerTeam = ?", (teamName, ))
@@ -175,7 +175,7 @@ def GetTeamPlayers(tournamentName, teamName):
     return playersList
 
 def GetPoints(tournamentName, matchId):
-    connexion = sqlite3.connect("databases/tournament"+tournamentName+"Database.db")
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     cursor.execute("SELECT * FROM points WHERE matchId = ?", (matchId, ))

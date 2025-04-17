@@ -15,7 +15,7 @@
       <p style="color: red;">{{ error }}</p>
   {% endif %}
 
-  {% if matchesList %}
+  {% if matchesList or matchesList==[] %}
   {% for k in matchesList %}
   <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="matchButton" value="{{k[0]}}">
     <div class="bg-top"><div class="bg-inner"></div></div>

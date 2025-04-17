@@ -34,7 +34,7 @@ def IsUniqueId (databaseId:str) -> bool:
     return False
 
 def GetParamatersList(databaseId: str):
-    with open("databases/tournament" + databaseId + "Database.txt", "r") as f:
+    with open("databases/" + databaseId + ".txt", "r") as f:
         content = f.read().strip()
         # On sépare les paramètres selon le séparateur personnalisé
         parameters = content.split("%Separator%")
@@ -59,7 +59,7 @@ def IsExistingTournament(databaseId:str) -> bool:
     return True
 
 def IsUniqueTeamId (teamId:str, databaseId:str) -> bool:
-    connexion = sqlite3.connect("databases/tournament"+databaseId+"Database.db")
+    connexion = sqlite3.connect("databases/"+databaseId+".db")
     cursor = connexion.cursor()
 
     if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamId}";""").fetchone()[0] <= 0:

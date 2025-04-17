@@ -39,7 +39,7 @@ def OrgaLogin():
         # Échec login
         return render_template('orgaLogin.html', error="Invalid credentials", parametersList=tournamentList)
 
-    # GET method
+    # POST method
     return render_template('orgaLogin.html')
 
 
@@ -79,7 +79,7 @@ def CreateTournament():
                 accessibility=accessibility
             )
 
-        # Champs vides
+        # Champs vides ou non-authorisés
         for key, value in tournamentDict.items():
             if value == "":
                 return render_template(
@@ -88,6 +88,13 @@ def CreateTournament():
                     parametersList=tournamentList,
                     isCreating=creatingState,
                     accessibility=accessibility
+                )
+            if dmb.separator in value:
+                return render_template(
+                    "createTournament.html",
+                    error=f"{key} presents an unauthorized string : "+dbm.separator,
+                    parametersList=tournamentList,
+                    isCreating=creatingState
                 )
 
         # Vérif type numérique
@@ -382,7 +389,7 @@ def Referee():
 
 
 @app.route("/spectatorLogin", methods=["GET", "POST"])
-def spectatorLogin():
+def SpectatorLogin():
     if request.method == "POST":
         tournamentName=request.form.get("tournamentName")
         if lm.IsExistingTournament(tournamentName):
