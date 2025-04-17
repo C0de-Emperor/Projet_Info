@@ -14,6 +14,9 @@
   {% if error %}
       <p style="color: red;">{{ error }}</p>
   {% endif %}
+  {% if validation %}
+      <p style="color: green;">{{ validation }}</p>
+  {% endif %}
 
   <div class="control block-cube block-input">
     <input type="text" name="tournamentName" placeholder="Tournament Name" value="{{ parametersList[0] }}">

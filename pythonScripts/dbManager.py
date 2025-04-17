@@ -112,7 +112,7 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored) VALUES (?, ?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored, datetime.datetime))
+    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored, dateOfPointSubmit) VALUES (?, ?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored, str(datetime.datetime.now())))
     connexion.commit()
 
     connexion.close()
