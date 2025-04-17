@@ -6,7 +6,7 @@ createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
         "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
-        "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName))",
+        "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldName), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME)",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN, dateOfPointSubmit DATETIME);"
     ]
 
@@ -189,7 +189,7 @@ def GetPoints(tournamentName, matchId):
         cursor.execute("SELECT team1Name, team2Name FROM matches WHERE matchId = ?", (matchId, ))
         teamsNames=cursor.fetchall()
 
-        newPointsList.append(list(playerInfos)+[k[3], teamsNames[0][not(k[4])], k[5]])
+        newPointsList.append(list(playerInfos)+[k[3], teamsNames[0][not(k[4])], k[5][-8:]])
 
     connexion.close()
 

@@ -387,7 +387,7 @@ def Referee():
 
     return render_template("referee.html")
 
-
+"""
 @app.route("/spectatorLogin", methods=["GET", "POST"])
 def SpectatorLogin():
     if request.method == "POST":
@@ -396,9 +396,20 @@ def SpectatorLogin():
             return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
         else:
             return render_template("spectatorLogin.html", error="unvalid tournament name")
-    return render_template("spectatorLogin.html")
+    return render_template("spectatorLogin.html")"""
 
+@app.route("/spectatorLogin", methods=["GET", "POST"])
+def SpectatorLogin():
+    if request.method=="GET":
+        return render_template("spectatorLogin.html")
+    elif request.method == "POST":
+        tournamentName=request.form.get("tournamentName")
+        if lm.IsExistingTournament(tournamentName):
+            return redirect(url_for("Spectator", tournamentName=tournamentName))
+        else:
+            return render_template("spectatorLogin.html")
 
+"""
 @app.route("/spectator", methods=["GET", "POST"])
 def Spectator():
     spectatorList=[]
@@ -409,7 +420,18 @@ def Spectator():
         #sprint(request.form.get("tournamentName"))
         
         return render_template("spectator.html", parametersList=spectatorList, points=dbm.GetPoints(spectatorList[0], spectatorList[1]))
-    return render_template("spectator.html")
+    return render_template("spectator.html")"""
+
+@app.route("/spectator/<tournamentName>", methods=["GET", "POST"])
+def Spectator(tournamentName):
+    print(tournamentName)
+    if request.method=="GET":
+        return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
+    elif request.method=="POST":
+        matchId=request.form.get("matchIdButton")
+
+        return render_template("spectator.html", parametersList=[tournamentName, matchId], points=dbm.GetPoints(tournamentName, matchId))
+    
 
 @app.route('/favicon.ico', methods=["GET"])
 def Favicon():
