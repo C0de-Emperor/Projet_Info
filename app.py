@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from pythonScripts import loginManager as lm
 from pythonScripts import dbManager as dbm
 
@@ -89,7 +89,7 @@ def CreateTournament():
                     isCreating=creatingState,
                     accessibility=accessibility
                 )
-            if dmb.separator in value:
+            if value!=None and dbm.separator in value:
                 return render_template(
                     "createTournament.html",
                     error=f"{key} presents an unauthorized string : "+dbm.separator,
@@ -275,7 +275,7 @@ def ChiefTeamLogin():
             return render_template("chiefTeamLogin.html", error="Invalid Tournament Name", parametersList=teamList)
 
         # Vérifie l'identité de l'équipe
-        dbPath = f"databases/tournament{teamDict['tournamentName']}Database.db"
+        dbPath = f"databases/{teamDict['tournamentName']}.db"
         if not dbm.IsTeamLoginCorrect(dbPath, teamDict["teamName"], teamDict["password"]):
             return render_template("chiefTeamLogin.html", error="Invalid Password", parametersList=teamList)
 
@@ -411,6 +411,9 @@ def Spectator():
         return render_template("spectator.html", parametersList=spectatorList, points=dbm.GetPoints(spectatorList[0], spectatorList[1]))
     return render_template("spectator.html")
 
+@app.route('/favicon.ico', methods=["GET"])
+def Favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
     app.run(debug=True)
