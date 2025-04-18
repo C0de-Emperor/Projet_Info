@@ -6,7 +6,7 @@
 
 
 {% block body %}
-<form class="form" autocomplete="off" action='/refereeMatchChoice/{{ parametersList[0] }}/{{ parametersList[1] }}' method="POST" >
+<form class="form" autocomplete="off" action='/refereeMatchChoice?refereedTournamentName={{ parametersList[0] }}&refereePasswordGiven={{ parametersList[1] }}' method="POST" >
   <div class="control">
     <h1> {{ parametersList[0] }}</h1>
   </div>

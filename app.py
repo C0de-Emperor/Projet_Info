@@ -300,10 +300,10 @@ def RefereeLogin():
         return redirect(url_for("RefereeMatchChoice", refereedTournamentName=tournamentName, refereePasswordGiven=refereePassword))
 
 
-@app.route("/refereeMatchChoice/<refereedTournamentName>/<refereePasswordGiven>", methods=["GET", "POST"])
-def RefereeMatchChoice(refereedTournamentName, refereePasswordGiven):
-    tournamentName=refereedTournamentName
-    refereePassword=refereePasswordGiven
+@app.route("/refereeMatchChoice", methods=["GET", "POST"])
+def RefereeMatchChoice():
+    tournamentName=request.args.get("refereedTournamentName")
+    refereePassword=request.args.get("refereePasswordGiven")
     if request.method=="GET":
         # Vérification des champs
         if not tournamentName:
@@ -326,15 +326,18 @@ def RefereeMatchChoice(refereedTournamentName, refereePasswordGiven):
     
     elif request.method=="POST":
         matchId=request.form.get("matchIdButton")
-        return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId))
+        return redirect(url_for("Referee", refereedTournamentName=tournamentName, refereePasswordGiven=refereePassword, currentMatchId=matchId))
+        return render_template("referee.html", refereedTournamentName=tournamentName, refereePasswordGiven=refereePassword, currentMatchId=matchId)
 
 
-@app.route("/referee/<refereedTournamentName>/<refereePasswordGiven>/<currentMatchId>", methods=["GET", "POST"])
-def Referee(refereedTournamentName, refereePasswordGiven, currentMatchId):
+@app.route("/referee", methods=["GET", "POST"])
+def Referee():
+    tournamentName=request.args.get("refereedTournamentName")
+    refereePassword=request.args.get("refereePasswordGiven")
+    matchId=request.args.get("currentMatchId")
     if request.method=="POST":
-        tournamentName=refereedTournamentName
-        refereePassword=refereePasswordGiven
-        matchId=currentMatchId
+
+        print(tournamentName, refereePassword, matchId)
 
         playerId = request.form.get("playerId")
         pointsScored = request.form.get("pointsScored")
@@ -353,6 +356,7 @@ def Referee(refereedTournamentName, refereePasswordGiven, currentMatchId):
             return "<h1> MEH </h1>"
         
         return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), validation="point enregistré avec succès")
+    return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId))
 
 
 @app.route("/spectatorLogin", methods=["GET", "POST"])
@@ -365,6 +369,7 @@ def SpectatorLogin():
             return redirect(url_for("Spectator", tournamentName=tournamentName))
         else:
             return render_template("spectatorLogin.html")
+
 
 @app.route("/spectator/<tournamentName>", methods=["GET", "POST"])
 def Spectator(tournamentName):
@@ -380,6 +385,7 @@ def Spectator(tournamentName):
 @app.route('/favicon.ico', methods=["GET"])
 def Favicon():
     return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
