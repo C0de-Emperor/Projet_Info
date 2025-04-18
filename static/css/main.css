@@ -207,6 +207,11 @@
     overflow-x: auto;
   }
 
+  .form.referee {
+    width: 620px;
+  }
+
+  .referee .columns,
   .createTeam .columns,
   .createTournament .columns {
     display: flex;
@@ -214,6 +219,7 @@
     gap: 20px;
   }
   
+  .referee .column,
   .createTeam .column,
   .createTournament .column {
     width: 300px;
@@ -299,3 +305,6 @@
     transform: rotate(45deg);
   }
   
+  .playerShirtText{
+    white-space: nowrap;
+  }

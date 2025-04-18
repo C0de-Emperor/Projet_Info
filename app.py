@@ -327,7 +327,6 @@ def RefereeMatchChoice():
     elif request.method=="POST":
         matchId=request.form.get("matchIdButton")
         return redirect(url_for("Referee", refereedTournamentName=tournamentName, refereePasswordGiven=refereePassword, currentMatchId=matchId))
-        return render_template("referee.html", refereedTournamentName=tournamentName, refereePasswordGiven=refereePassword, currentMatchId=matchId)
 
 
 @app.route("/referee", methods=["GET", "POST"])
@@ -339,23 +338,21 @@ def Referee():
 
         print(tournamentName, refereePassword, matchId)
 
-        playerId = request.form.get("playerId")
+        playerId = request.form.get("playerIdButton")
         pointsScored = request.form.get("pointsScored")
-        hasTeam1Scored = request.form.get("hasTeam1Scored")
-        hasTeam2Scored = request.form.get("hasTeam2Scored")
 
-        # Vérification des champs
-        if hasTeam1Scored==hasTeam2Scored: return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId, playerId, pointsScored], matchInfos=dbm.GetMatch(tournamentName, matchId))
-
-        result=dbm.AddPoint(tournamentName, matchId, playerId, pointsScored, hasTeam1Scored=="on")
-
-        print(hasTeam1Scored, hasTeam2Scored)
+        result=dbm.AddPoint(tournamentName, matchId, playerId, pointsScored)
 
         if result!="": 
             print(result)
             return "<h1> MEH </h1>"
         
-        return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), validation="point enregistré avec succès")
+        matchTeams=[dbm.GetTeamPlayers(tournamentName, k) for k in dbm.GetMatch(tournamentName, matchId)[3:5]]
+        return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), teams=matchTeams, validation="point enregistré avec succès")
+    elif request.method=="GET":
+        matchTeams=[dbm.GetTeamPlayers(tournamentName, k) for k in dbm.GetMatch(tournamentName, matchId)[3:5]]
+        return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), teams=matchTeams)
+
     return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId))
 
 
@@ -378,7 +375,7 @@ def Spectator(tournamentName):
         return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
     elif request.method=="POST":
         matchId=request.form.get("matchIdButton")
-
+        print(dbm.GetPoints(tournamentName, matchId))
         return render_template("spectator.html", parametersList=[tournamentName, matchId], points=dbm.GetPoints(tournamentName, matchId))
     
 

@@ -4,10 +4,10 @@ separator = "%Separator%"
 
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
-        "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
+        "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerShirtNumber INTEGER, playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldName), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME)",
-        "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, team1Scored BOOLEAN, dateOfPointSubmit DATETIME);"
+        "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, dateOfPointSubmit DATETIME);"
     ]
 
 def WriteTournamentParameters(tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
@@ -92,7 +92,7 @@ def AddMatches(tournamentName, matchesList):
 
     return ""
 
-def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
+def AddPoint(tournamentName, matchId, playerId, numberOfPoints):
 
     try:
         matchId=int(matchId)
@@ -106,13 +106,11 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints, team1Scored):
         numberOfPoints=int(numberOfPoints)
     except:
         return "numberOfPoints should be an integer"
-    
-    if type(team1Scored)!=bool: return "team1Scored should be a boolean"
 
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, team1Scored, dateOfPointSubmit) VALUES (?, ?, ?, ?, ?)", (matchId, playerId, numberOfPoints, team1Scored, str(datetime.datetime.now())))
+    cursor.execute("INSERT INTO points(matchId, playerId, numberOfPoints, dateOfPointSubmit) VALUES (?, ?, ?, ?)", (matchId, playerId, numberOfPoints, str(datetime.datetime.now())))
     connexion.commit()
 
     connexion.close()
@@ -183,13 +181,13 @@ def GetPoints(tournamentName, matchId):
 
     newPointsList=[]
     for k in pointsList:
-        cursor.execute("SELECT playerName, playerFirstName FROM players WHERE playerId=?;", (k[2],))
+        cursor.execute("SELECT playerName, playerFirstName, playerTeam FROM players WHERE playerId=?;", (k[2],))
         playerInfos=cursor.fetchone()
 
         cursor.execute("SELECT team1Name, team2Name FROM matches WHERE matchId = ?", (matchId, ))
         teamsNames=cursor.fetchall()
 
-        newPointsList.append(list(playerInfos)+[k[3], teamsNames[0][not(k[4])], k[5][-8:]])
+        newPointsList.append(list(playerInfos)+[k[3], k[4][11:19]])
 
     connexion.close()
 
