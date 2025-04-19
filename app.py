@@ -375,7 +375,6 @@ def Spectator(tournamentName):
         return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
     elif request.method=="POST":
         matchId=request.form.get("matchIdButton")
-        print(dbm.GetPoints(tournamentName, matchId))
         return render_template("spectator.html", parametersList=[tournamentName, matchId], points=dbm.GetPoints(tournamentName, matchId))
     
 

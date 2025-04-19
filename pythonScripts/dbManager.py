@@ -181,7 +181,7 @@ def GetPoints(tournamentName, matchId):
 
     newPointsList=[]
     for k in pointsList:
-        cursor.execute("SELECT playerName, playerFirstName, playerTeam FROM players WHERE playerId=?;", (k[2],))
+        cursor.execute("SELECT playerFirstName, playerName, playerTeam FROM players WHERE playerId=?;", (k[2],))
         playerInfos=cursor.fetchone()
 
         cursor.execute("SELECT team1Name, team2Name FROM matches WHERE matchId = ?", (matchId, ))
