@@ -6,7 +6,7 @@
 
 
 {% block body %}
-  <form class="form referee" autocomplete="off" action='/referee?refereedTournamentName={{ parametersList[0] }}&refereePasswordGiven={{ parametersList[1] }}&currentMatchId={{ parametersList[2] }}' method="POST" >
+  <form class="form referee" autocomplete="off" action='/referee?tournamentName={{ parametersList[0] }}&refereePassword={{ parametersList[1] }}&matchId={{ parametersList[2] }}' method="POST" >
   <div class="control">
     <h1> {{ parametersList[0] }}</h1>
   </div>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="refereeMatchButton">
-    <span class="text">Par :</span>
+    <span class="text">Marqués par :</span>
   </div>
   
   <div class="columns">
@@ -39,7 +39,7 @@
   <div class="column">
 
     <div class="refereeMatchButton">
-      <span class="text"> {{ team[0][4] }} </span>
+      <h3 class="text"> {{ team[0][4] }} </h3>
     </div>
 
     {% for player in team %}

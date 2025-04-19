@@ -10,12 +10,12 @@ createDatabaseInstructions = [
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, dateOfPointSubmit DATETIME);"
     ]
 
-def WriteTournamentParameters(tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
-    tournamentAccessibilityState = str(tournamentAccessibilityState)
-    with open("databases/"+tournamentName+".txt", "w") as f:
-        for param in [_sport, _duration, _teamSize, _terrain, _algo, _maxTeam, _selection, _points, _refP, tournamentName, tournamentAccessibilityState]:
-            print([param])
-            f.write(param + separator)
+def WriteTournamentParameters(tournamentDict:dict, isTournamentStarted:bool):#tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
+    with open("databases/"+tournamentDict["tournamentName"]+".txt", "w") as f:
+        for param in ["sport", "matchDuration", "teamSize", "availableSportFields", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "tournamentName"]:
+            print([tournamentDict[param]])
+            f.write(tournamentDict[param] + separator)
+        f.write(isTournamentStarted+separator)
 
 def CreateTournament(tournamentName, tournamentDict, access:str):
     
@@ -30,17 +30,7 @@ def CreateTournament(tournamentName, tournamentDict, access:str):
     connexion.commit()
 
     connexion.close()
-    WriteTournamentParameters(tournamentDict['tournamentName'], 
-                                  tournamentDict['sport'],
-                                  tournamentDict['matchDuration'],
-                                tournamentDict['teamSize'],
-                                tournamentDict['availableSportFields'],
-                                tournamentDict['algorithm'],
-                                tournamentDict['maxTeamNumber'],
-                                tournamentDict['teamSelectionMethod'],
-                                tournamentDict['points'],
-                                tournamentDict['refereePassword'],
-                                access)
+    WriteTournamentParameters(tournamentDict, str(access))
 
 def AddTeam(tournamentName, teamName, teamPlayers, teamChiefIndex, password):
 

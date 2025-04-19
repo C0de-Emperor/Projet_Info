@@ -6,7 +6,7 @@
 
 
 {% block body %}
-<form class="form" autocomplete="off" action='/orgaLogin' method="POST" >
+<form class="form" autocomplete="off" action='/orgaLogin?isCreating=False' method="POST" >
     <div class="control">
       <h1>Sign In</h1>
     </div>
@@ -40,7 +40,7 @@
     </button>
 
     <div class="create">
-      <a href="/createTournament">Create new Tournament</a>
+      <a href="/createTournament?isCreating=True&isStarted=False">Create new Tournament</a>
     </div>
 </form>
 {% endblock %}
