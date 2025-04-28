@@ -48,8 +48,8 @@ def CreateTournament():
     tournamentList=[]
     tournamentDict={}
 
-    isCreating=request.args.get("isCreating")=="True"
-    isStarted=request.args.get("isStarted")=="True"
+    isCreating=request.args.get("isCreating") == "True"
+    isStarted=request.args.get("isStarted") == "True"
 
     print(isCreating, isStarted)
 
@@ -68,8 +68,7 @@ def CreateTournament():
             if value == "":
                 return render_template("createTournament.html",parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error=f"{key} is empty",)
             if value!=None and dbm.separator in value:
-                return render_template(
-                    "createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error=f"{key} presents an unauthorized string : "+dbm.separator)
+                return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error=f"{key} presents an unauthorized string : "+dbm.separator)
 
         # Vérif type numérique
         try:
@@ -81,7 +80,7 @@ def CreateTournament():
             return render_template(
                 'createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="Invalid data type: matchDuration, teamSize, availableSportFields, and maxTeamNumber must be integers.")
 
-        if isCreating==True:
+        if isCreating:
             tournamentDict["tournamentName"]=request.form.get("tournamentName")
             tournamentList.append(request.form.get("tournamentName"))
 
@@ -100,7 +99,7 @@ def CreateTournament():
 
             return render_template("orgaLogin.html", validation="Tournament successfully created", parametersList=[])
         else:
-            tournamentDict["tournamentName"]=request.args.get("tournamentName")
+            tournamentDict["tournamentName"] = request.args.get("tournamentName")
             tournamentList.append(request.args.get("tournamentName"))
 
             tournamentDict["isTournamentStarted"]=str(isStarted)
@@ -119,6 +118,8 @@ def CreateTournament():
             if action == "startTournament":
                 dbm.WriteTournamentParameters(tournamentDict, "True")
                 return render_template("orgaLogin.html", validation="Tournament successfully started", parametersList=[])
+            if action == "infrastructures":
+                return redirect(url_for('Infrastructures', tournamentName=tournamentDict["tournamentName"], sportFieldNumber=tournamentDict["availableSportFields"]))
             else:
                 dbm.WriteTournamentParameters(tournamentDict, "False")
                 return render_template("orgaLogin.html", validation="Tournament successfully modified", parametersList=[])
@@ -195,6 +196,12 @@ def CreateTeam():
 
     # GET request
     return render_template("createTeam.html", isCreating=creatingState, n=n, teamMembers=teamMembers, parametersList=teamList)
+
+
+@app.route('/infrastructures', methods=['GET', 'POST'])
+def Infrastructures ():
+    if request.method=="GET":
+        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])    
 
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])

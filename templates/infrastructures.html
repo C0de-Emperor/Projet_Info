@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+
+{% block body %}
+<form class="form" autocomplete="off" action='/infrastructures?tournamentName={{ tournamentName }}&sportFieldNumber={{ sportFieldNumber }}' method="POST" >
+  <div class="control">
+    <h1>Infrastructures</h1>
+  </div>
+
+  {% if error %}
+      <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  <div class="columns">
+    <div class="column scrollable-column">
+      {% for i in range(0, parametersList[1]) %}
+      <div class="control block-cube block-input">
+        <input type="text" name="sportField{{ i }}" placeholder="Sport Field n°{{ i }}" value="">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</form>
+{% endblock %}
