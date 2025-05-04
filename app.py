@@ -201,9 +201,44 @@ def CreateTeam():
 @app.route('/infrastructures', methods=['GET', 'POST'])
 def Infrastructures ():
     if request.method=="GET":
-        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])    
+        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
 
 
+@app.route('/chiefTeamLogin', methods=['GET', 'POST'])
+def ChiefTeamLogin():
+    if request.method=="GET":
+        return render_template('chiefTeamLogin.html')
+    elif request.method=="POST":
+        teamDict={}
+        teamList=[]
+        for k in ["tournamentName", "teamName", "teamPassword"]:
+            teamDict[k]=request.form.get(k)
+            teamList.append(request.form.get(k))
+
+        action=request.form.get("action")
+
+        # Vérifie que tous les champs sont remplis
+        for (key, value) in teamDict.items():
+            if not value: render_template("chiefTeamLogin.html", error=key+" is empty", parametersList=teamList)
+        
+        # Vérifie si le tournoi existe
+        if not lm.IsExistingTournament(teamDict["tournamentName"]):
+            return render_template("chiefTeamLogin.html", error="Invalid Tournament Name", parametersList=teamList)
+
+        if action=="create":
+            pass
+
+
+
+        # Vérifie l'identité de l'équipe
+        dbPath = f"databases/{teamDict['tournamentName']}.db"
+        if not dbm.IsTeamLoginCorrect(dbPath, teamDict["teamName"], teamDict["password"]):
+            return render_template("chiefTeamLogin.html", error="Invalid Password", parametersList=teamList)
+        
+
+
+
+"""
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
 def ChiefTeamLogin():
     teamList = []
@@ -239,7 +274,7 @@ def ChiefTeamLogin():
 
     # GET request
     return render_template("chiefTeamLogin.html", parametersList=teamList)
-
+"""
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin():
