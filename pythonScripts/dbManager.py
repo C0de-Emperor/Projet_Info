@@ -4,7 +4,7 @@ separator = "%Separator%"
 
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
-        "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerShirtNumber INTEGER, playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN);",
+        "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerShirtNumber INTEGER, playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN DEFAULTS false);",
         "CREATE TABLE fields (fieldName VARCHAR(50) PRIMARY KEY);",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchFieldName VARCHAR(50) REFERENCES fields(fieldName), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME)",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, dateOfPointSubmit DATETIME);"
@@ -107,8 +107,8 @@ def AddPoint(tournamentName, matchId, playerId, numberOfPoints):
 
     return ""
 
-def IsTeamLoginCorrect (databasePath:str, teamName:str, teamPassword:str) -> bool:
-    connexion = sqlite3.connect(databasePath)
+def IsTeamLoginCorrect (tournamentName:str, teamName:str, teamPassword:str) -> bool:
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
     if cursor.execute(f"""SELECT count(*) FROM teams WHERE teamName = "{teamName}" AND teamPassword = "{teamPassword}";""").fetchone()[0] <= 0:
@@ -126,7 +126,7 @@ def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
     minPlayerId=cursor.fetchone()[0]
 
     for k in range(len(teamPlayers)):
-        cursor.execute("UPDATE players SET playerName=?, playerFirstName=? WHERE playerTeam=? AND playerId=?", (teamPlayers[k][0], teamPlayers[k][1], teamName, minPlayerId+k))
+        cursor.execute("UPDATE players SET playerName=?, playerFirstName=?, playerShirtNumber=? WHERE playerTeam=? AND playerId=?", (teamPlayers[k][0], teamPlayers[k][1], teamPlayers[k][2], teamName, minPlayerId+k))
     connexion.commit()
 
     connexion.close()
@@ -182,3 +182,17 @@ def GetPoints(tournamentName, matchId):
     connexion.close()
 
     return newPointsList
+
+def AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers):
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+
+    cursor.execute("INSERT INTO teams VALUES (?, ?)", (teamName, teamPassword))
+
+    cursor.execute("INSERT INTO players(playerTeam, isTeamChief) VALUES (?, true)", (teamName, ))
+    for k in range(numberOfPlayers-1):
+        cursor.execute("INSERT INTO players(playerTeam) VALUES (?)", (teamName, ))
+
+    connexion.commit()
+
+    connexion.close()

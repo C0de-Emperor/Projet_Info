@@ -125,6 +125,12 @@ def CreateTournament():
                 return render_template("orgaLogin.html", validation="Tournament successfully modified", parametersList=[])
 
 
+@app.route('/infrastructures', methods=['GET', 'POST'])
+def Infrastructures ():
+    if request.method=="GET":
+        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
+
+"""
 @app.route('/createTeam', methods=['GET', 'POST'])
 def CreateTeam():
     teamList = []
@@ -195,19 +201,54 @@ def CreateTeam():
             return render_template("chiefTeamLogin.html", validation="Team successfully updated", parametersList=[])
 
     # GET request
-    return render_template("createTeam.html", isCreating=creatingState, n=n, teamMembers=teamMembers, parametersList=teamList)
+    return render_template("createTeam.html", isCreating=creatingState, n=n, teamMembers=teamMembers, parametersList=teamList)"""
 
 
-@app.route('/infrastructures', methods=['GET', 'POST'])
-def Infrastructures ():
-    if request.method=="GET":
-        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
+@app.route('/createTeam', methods=['GET', 'POST'])
+def CreateTeam():
+    tournamentName=request.args.get("tournamentName")
+    teamName=request.args.get("teamName")
+    teamPassword=request.args.get("teamPassword")
+    
+    isCreating=request.args.get("isCreating")
+
+    # Vérifie l'identité de l'équipe
+    if not dbm.IsTeamLoginCorrect(tournamentName, teamName, teamPassword) and not isCreating:
+        return render_template("chiefTeamLogin.html", error="Invalid Password", parametersList=[tournamentName, teamName])
+    
+    numberOfPlayers=int(lm.GetParamatersList(tournamentName)[2])
+
+    if request.method == "GET":
+
+        if isCreating=="True":
+            dbm.AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers)
+
+            return render_template("createTeam.html", parametersList=[tournamentName, teamName, teamPassword], players=[["", ""]]*numberOfPlayers)
+        else:
+            players=[["", ""]]*numberOfPlayers
+
+            rawPlayers=dbm.GetTeamPlayers(tournamentName, teamName)
+            for k in range(len(rawPlayers)):
+                players[k]=[rawPlayers[k][1], rawPlayers[k][2]]
+
+            return render_template("createTeam.html", parametersList=[tournamentName, teamName, teamPassword], players=players)
+    elif request.method=="POST":
+        teamPlayers=[]
+        for k in range(numberOfPlayers):
+            teamPlayers.append([request.form.get(i+str(k)) for i in ["teamMemberFirstName", "teamMemberLastName", "teamMemberShirtNumber"]])
+        
+        print(teamPlayers)
+
+        dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
+
+        return redirect(url_for("ChiefTeamLogin", validation="team modified successfully"))
+        
 
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
 def ChiefTeamLogin():
     if request.method=="GET":
-        return render_template('chiefTeamLogin.html')
+        return render_template('chiefTeamLogin.html', validation=request.args.get("validation"), parametersList=["", "", ""])
     elif request.method=="POST":
         teamDict={}
         teamList=[]
@@ -225,15 +266,7 @@ def ChiefTeamLogin():
         if not lm.IsExistingTournament(teamDict["tournamentName"]):
             return render_template("chiefTeamLogin.html", error="Invalid Tournament Name", parametersList=teamList)
 
-        if action=="create":
-            pass
-
-
-
-        # Vérifie l'identité de l'équipe
-        dbPath = f"databases/{teamDict['tournamentName']}.db"
-        if not dbm.IsTeamLoginCorrect(dbPath, teamDict["teamName"], teamDict["password"]):
-            return render_template("chiefTeamLogin.html", error="Invalid Password", parametersList=teamList)
+        return redirect(url_for("CreateTeam", tournamentName=teamDict["tournamentName"], teamName=teamDict["teamName"], teamPassword=teamDict["teamPassword"], isCreating=(action=="create")))
         
 
 

@@ -33,24 +33,25 @@
   </div>
 
   <div class="control block-cube block-input">
-    <input type="password" name="password" placeholder="Password" value="{{ parametersList[2] }}">
+    <input type="password" name="teamPassword" placeholder="Password" value="{{ parametersList[2] }}">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
   </div>
 
-  <button class="btn block-cube block-cube-hover" name="action" value="logIn" type="submit">
+  <button class="btn block-cube block-cube-hover refereeMatchButton" name="action" value="logIn" type="submit">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
     <span class="text">Log In</span>
   </button>
 
-  <button class="btn block-cube block-cube-hover" name="action" value="create" type="submit">
+  <button class="btn block-cube block-cube-hover refereeMatchButton" name="action" value="create" type="submit">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
     <span class="text">Create new team</span>
   </button>
+
 </form>
 {% endblock %}
