@@ -130,79 +130,6 @@ def Infrastructures ():
     if request.method=="GET":
         return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
 
-"""
-@app.route('/createTeam', methods=['GET', 'POST'])
-def CreateTeam():
-    teamList = []
-    teamMembers = []
-    n = 0
-    creatingState = True
-
-    if request.method == 'POST':
-        # Récupération des valeurs principales
-        teamDict = {
-            "tournamentName": request.form.get("tournamentName"),
-            "teamName": request.form.get("teamName"),
-            "password": request.form.get("password")
-        }
-
-        teamList = [teamDict["tournamentName"], teamDict["teamName"]]
-        if teamDict["password"] is not None:
-            teamList.append(teamDict["password"])
-        else:
-            creatingState = False
-
-        # Vérification du nom de tournoi
-        if not teamDict["tournamentName"]:
-            return render_template("createTeam.html", error="Tournament name is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-        if not lm.IsExistingTournament(teamDict["tournamentName"]):
-            return render_template("createTeam.html", error="Invalid Tournament Name", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-        # Récupération du nombre de membres
-        try:
-            n = int(lm.GetParamatersList(teamDict["tournamentName"])[2])
-        except Exception:
-            return render_template("createTeam.html", error="Erreur en récupérant la taille d'équipe", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-        # Construction de la liste des membres
-        for i in range(n):  # i de 0 à n-1
-            first_name = request.form.get(f"teamMemberFirstName{i}")
-            last_name = request.form.get(f"teamMemberLastName{i}")
-            teamMembers.append([first_name, last_name])
-
-        action = request.form.get("verify")
-
-        # Vérification uniquement de la taille de l’équipe
-        if action == "verify" and creatingState:
-            return render_template("createTeam.html", parametersList=teamList, n=n, teamMembers=[["", ""]] * n, isCreating=creatingState)
-
-        # Vérification des champs vides
-        if any(not value for key, value in teamDict.items() if key != "password"):
-            return render_template("createTeam.html", error="One of the inputs is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-        if any(first == "" or last == "" for first, last in teamMembers):
-            return render_template("createTeam.html", error="A member is empty", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-        # Création d’équipe
-        if creatingState:
-            if not lm.IsUniqueTeamId(teamDict["teamName"], teamDict["tournamentName"]):
-                return render_template("createTeam.html", error="Team Name Already Exists", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-            dbm.AddTeam(teamDict["tournamentName"], teamDict["teamName"], teamMembers, 0, teamDict["password"])
-            return render_template("chiefTeamLogin.html", validation="Team successfully created", parametersList=[])
-
-        # Mise à jour d’équipe
-        else:
-            if lm.IsUniqueTeamId(teamDict["teamName"], teamDict["tournamentName"]):
-                return render_template("createTeam.html", error="Team Name Doesn't Exist", n=n, parametersList=teamList, teamMembers=teamMembers, isCreating=creatingState)
-
-            dbm.UpdateTeam(teamDict["tournamentName"], teamDict["teamName"], teamMembers)
-            return render_template("chiefTeamLogin.html", validation="Team successfully updated", parametersList=[])
-
-    # GET request
-    return render_template("createTeam.html", isCreating=creatingState, n=n, teamMembers=teamMembers, parametersList=teamList)"""
-
 
 @app.route('/createTeam', methods=['GET', 'POST'])
 def CreateTeam():
@@ -221,6 +148,9 @@ def CreateTeam():
     if request.method == "GET":
 
         if isCreating=="True":
+            if not lm.IsUniqueTeamId(teamName, tournamentName):
+                return render_template("chiefTeamLogin.html", error="Team name already taken", parametersList=[tournamentName, teamName])
+
             dbm.AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers)
 
             return render_template("createTeam.html", parametersList=[tournamentName, teamName, teamPassword], players=[["", ""]]*numberOfPlayers)
@@ -229,15 +159,13 @@ def CreateTeam():
 
             rawPlayers=dbm.GetTeamPlayers(tournamentName, teamName)
             for k in range(len(rawPlayers)):
-                players[k]=[rawPlayers[k][1], rawPlayers[k][2]]
+                players[k]=[rawPlayers[k][1], rawPlayers[k][2], rawPlayers[k][3]]
 
             return render_template("createTeam.html", parametersList=[tournamentName, teamName, teamPassword], players=players)
     elif request.method=="POST":
         teamPlayers=[]
         for k in range(numberOfPlayers):
             teamPlayers.append([request.form.get(i+str(k)) for i in ["teamMemberFirstName", "teamMemberLastName", "teamMemberShirtNumber"]])
-        
-        print(teamPlayers)
 
         dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
 
@@ -268,46 +196,6 @@ def ChiefTeamLogin():
 
         return redirect(url_for("CreateTeam", tournamentName=teamDict["tournamentName"], teamName=teamDict["teamName"], teamPassword=teamDict["teamPassword"], isCreating=(action=="create")))
         
-
-
-
-"""
-@app.route('/chiefTeamLogin', methods=['GET', 'POST'])
-def ChiefTeamLogin():
-    teamList = []
-    
-    if request.method == 'POST':
-        # Récupération des champs
-        teamDict = {
-            "tournamentName": request.form.get("tournamentName"),
-            "teamName": request.form.get("teamName"),
-            "password": request.form.get("password")
-        }
-        teamList = list(teamDict.values())
-
-        # Vérifie que tous les champs sont remplis
-        for key, value in teamDict.items():
-            if not value:
-                return render_template("chiefTeamLogin.html", error=f"{key} is empty", parametersList=teamList)
-
-        # Vérifie si le tournoi existe
-        if not lm.IsExistingTournament(teamDict["tournamentName"]):
-            return render_template("chiefTeamLogin.html", error="Invalid Tournament Name", parametersList=teamList)
-
-        # Vérifie l'identité de l'équipe
-        dbPath = f"databases/{teamDict['tournamentName']}.db"
-        if not dbm.IsTeamLoginCorrect(dbPath, teamDict["teamName"], teamDict["password"]):
-            return render_template("chiefTeamLogin.html", error="Invalid Password", parametersList=teamList)
-
-        # Récupère les membres de l'équipe
-        rawMembers = dbm.GetTeamPlayers(teamDict["tournamentName"], teamDict["teamName"])
-        teamMembers = [[member[1], member[2]] for member in rawMembers]  # [firstName, lastName]
-
-        return render_template("createTeam.html", parametersList=teamList, n=len(teamMembers), teamMembers=teamMembers, isCreating=False)
-
-    # GET request
-    return render_template("chiefTeamLogin.html", parametersList=teamList)
-"""
 
 @app.route('/refereeLogin', methods=['GET', 'POST'])
 def RefereeLogin():
