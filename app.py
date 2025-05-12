@@ -118,17 +118,17 @@ def CreateTournament():
             if action == "startTournament":
                 dbm.WriteTournamentParameters(tournamentDict, "True")
                 return render_template("orgaLogin.html", validation="Tournament successfully started", parametersList=[])
-            if action == "infrastructures":
-                return redirect(url_for('Infrastructures', tournamentName=tournamentDict["tournamentName"], sportFieldNumber=tournamentDict["availableSportFields"]))
+            if action == "availabilities":
+                return redirect(url_for('Availabilities', tournamentName=tournamentDict["tournamentName"], sportFieldNumber=tournamentDict["availableSportFields"]))
             else:
                 dbm.WriteTournamentParameters(tournamentDict, "False")
                 return render_template("orgaLogin.html", validation="Tournament successfully modified", parametersList=[])
 
 
-@app.route('/infrastructures', methods=['GET', 'POST'])
-def Infrastructures ():
+@app.route('/availabilities', methods=['GET', 'POST'])
+def Availabilities ():
     if request.method=="GET":
-        return render_template("infrastructures.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
+        return render_template("availabilities.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])
@@ -188,7 +188,7 @@ def ChiefTeamLogin():
 
         # Vérifie que tous les champs sont remplis
         for (key, value) in teamDict.items():
-            if not value: render_template("chiefTeamLogin.html", error=key+" is empty", parametersList=teamList)
+            if not value or value=="": render_template("chiefTeamLogin.html", error=key+" is empty", parametersList=teamList)
         
         # Vérifie si le tournoi existe
         if not lm.IsExistingTournament(teamDict["tournamentName"]):
