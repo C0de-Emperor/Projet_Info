@@ -1,6 +1,8 @@
 import sqlite3, loginManager, itertools
 from dateutil import parser
 from datetime import timedelta
+from collections import defaultdict
+import random
 
 def GetMatchesNumber (tournamentName:str) -> int:
     return len(GetMatchesAvailabilities(tournamentName))
@@ -24,31 +26,42 @@ def GetMatchesAvailabilities (tournamentName:str) -> list:
     connexion.close()
     return matches
 
-def CreateMatches (tournamentName:str):
-    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+def CreateMatches(tournamentName: str):
+    connexion = sqlite3.connect("databases/" + tournamentName + ".db")
     cursor = connexion.cursor()
 
-    combinations = [l for l in itertools.combinations(GetTeams(tournamentName),2)]
-    NComb = len(combinations)
-    NAvailabilities = GetMatchesNumber(tournamentName)
-    availabilities = GetMatchesAvailabilities (tournamentName)
+    # Données
+    availabilities = GetMatchesAvailabilities(tournamentName)
+    random.shuffle(availabilities)
+    teams = GetTeams(tournamentName)
+    nTeams = len(teams)
 
-    if NAvailabilities < NComb:
-        return "pas assez de crenaux disponibles" # retourner une erreur
-    
-    if NComb < 3:
-        return "Pas assez de matchs" # retourner une erreur
-    
-    i = 0
-    for comb in combinations:
-        cursor.execute(f"""INSERT INTO matches (matchDate, matchAvailabilityId, team1Name, team2Name) VALUES ("{availabilities[i][0].strftime("%Y-%m-%d %H:%M:%S")}", {availabilities[i][1]}, "{comb[0]}", "{comb[1]}")""")
-        i += 1
+    # Toutes les combinaisons uniques possibles sans doublon
+    unique_combinations = list(itertools.combinations(teams, 2))
+    random.shuffle(unique_combinations)
+
+    # Ne pas dépasser le nombre de créneaux
+    selected_matches = unique_combinations[:len(availabilities)]
+
+    # Suivi des matchs joués par équipe
+    match_count = {team: 0 for team in teams}
+    for team1, team2 in selected_matches:
+        match_count[team1] += 1
+        match_count[team2] += 1
+
+    # Insertion dans la base
+    for i, (team1, team2) in enumerate(selected_matches):
+        match_date, avail_id = availabilities[i]
+        cursor.execute("""
+            INSERT INTO matches (matchDate, matchAvailabilityId, team1Name, team2Name)
+            VALUES (?, ?, ?, ?)""",
+            (match_date.strftime("%Y-%m-%d %H:%M:%S"), avail_id, team1, team2)
+        )
 
     connexion.commit()
     connexion.close()
-
     return None
-    
+
 def GetTeams (tournamentName:str) -> list:
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
@@ -57,3 +70,4 @@ def GetTeams (tournamentName:str) -> list:
     connexion.close()
 
     return [team[0] for team in teams] 
+
