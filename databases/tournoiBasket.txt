@@ -1,1 +1,1 @@
-Basket%Separator%40%Separator%5%Separator%12%Separator%auto%Separator%7%Separator%auto%Separator%3-2-1%Separator%refereePassword%Separator%tournoiBasket%Separator%False%Separator%
+Basket%Separator%40%Separator%5%Separator%12%Separator%auto%Separator%7%Separator%auto%Separator%3-2-1%Separator%refereePassword%Separator%tournoiBasket%Separator%True%Separator%
