@@ -119,7 +119,7 @@ def CreateTournament():
                 dbm.WriteTournamentParameters(tournamentDict, "True")
                 return render_template("orgaLogin.html", validation="Tournament successfully started", parametersList=[])
             if action == "availabilities":
-                return redirect(url_for('Availabilities', tournamentName=tournamentDict["tournamentName"], sportFieldNumber=tournamentDict["availableSportFields"]))
+                return redirect(url_for('Availabilities', tournamentName=tournamentDict["tournamentName"]))
             else:
                 dbm.WriteTournamentParameters(tournamentDict, "False")
                 return render_template("orgaLogin.html", validation="Tournament successfully modified", parametersList=[])
@@ -127,8 +127,30 @@ def CreateTournament():
 
 @app.route('/availabilities', methods=['GET', 'POST'])
 def Availabilities ():
+    tournamentName=request.args.get("tournamentName")
+    
     if request.method=="GET":
-        return render_template("availabilities.html", parametersList=[request.args.get("tournamentName"), int(request.args.get("sportFieldNumber"))])
+        availabilitiesList=dbm.GetAvailabilities(tournamentName)
+
+        return render_template("availabilities.html", tournamentName=tournamentName, availabilitiesList=availabilitiesList)
+    elif request.method=="POST":
+        availabilitiesList=[]
+        availabilitiesNumber=request.args.get("availabilitiesNumber")
+        for k in range(int(availabilitiesNumber)):
+            currentAvailability=[]
+            print("date"+str(k))
+            currentAvailability.append(request.form.get("date"+str(k)))
+            currentAvailability.append(request.form.get("duration"+str(k)))
+            currentAvailability.append(request.form.get("daysInARow"+str(k)))
+            currentAvailability.append(request.form.get("fieldName"+str(k)))
+            
+            availabilitiesList.append(currentAvailability)
+        
+        dbm.UpdateAvailabilities(tournamentName, availabilitiesList)
+        
+        
+        parametersList = lm.GetParamatersList(tournamentName)
+        return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[10])
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])
@@ -292,4 +314,4 @@ def Favicon():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=True)

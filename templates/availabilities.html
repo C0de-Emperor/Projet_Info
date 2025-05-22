@@ -7,14 +7,7 @@
 
 {% block body %}
 
-
-
-{% endblock %}
-
-
-<!--
-{% block body %}
-<form class="form" autocomplete="off" action='/infrastructures?tournamentName={{ tournamentName }}&sportFieldNumber={{ sportFieldNumber }}' method="POST" >
+<form class="form" autocomplete="off" action='/availabilities?tournamentName={{ tournamentName }}&availabilitiesNumber={{ availabilitiesList|length }}' method="POST" >
   <div class="control">
     <h1>Infrastructures</h1>
   </div>
@@ -24,16 +17,32 @@
   {% endif %}
 
   <div class="columns">
-    <div class="column scrollable-column">
-      {% for i in range(0, parametersList[1]) %}
-      <div class="control block-cube block-input">
-        <input type="text" name="sportField{{ i }}" placeholder="Sport Field n°{{ i }}" value="">
+    <div class="column scrollable-column" id="availabilityColumn">
+
+    {% for k in availabilitiesList %}
+    <div class="control block-cube block-input availabilityInputBox" name="{{ k[0] }}">
+        <input type="datetime-local" name="date{{ k[0] }}" value="{{ k[1] }}">
+        <input type="text" name="duration{{ k[0] }}" placeholder="durée (min)" value="{{ k[2] }}">
+        <input type="text" name="daysInARow{{ k[0] }}" placeholder="nb de jours d'affilée" value="{{ k[3] }}">
+        <input type="text" name="fieldName{{ k[0] }}" placeholder="nom du terrain" value="{{ k[4] }}">
+
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
-      </div>
-      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+      <span class="text">Save changes</span>
+    </button>
+
     </div>
   </div>
 </form>
-{% endblock %}-->
+
+
+<script langage="javascript" src="{{ url_for('static', filename='js/availabilities.js') }}"></script>
+{% endblock %}

@@ -196,3 +196,34 @@ def AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers):
     connexion.commit()
 
     connexion.close()
+
+def GetAvailabilities(tournamentName):
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT * FROM availabilities")
+    availabilitiesList=cursor.fetchall()
+
+    connexion.close()
+
+    return availabilitiesList
+
+def UpdateAvailabilities(tournamentName, availabilitiesList):
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+    
+    cursor.execute("SELECT availabilityId FROM availabilities ORDER BY availabilityId DESC")
+    maxId=cursor.fetchone()[0]
+    
+    print(maxId, availabilitiesList)
+    
+    for k in range(maxId+1):
+        print(tuple(availabilitiesList[k])+(k, ))
+        cursor.execute("UPDATE availabilities SET startTime=?, duration=?, daysInARow=?, fieldName=? WHERE availabilityId=?;", tuple(availabilitiesList[k])+(k, ))
+    
+    for k in range(maxId+1, len(availabilitiesList)):
+        print(tuple(availabilitiesList[k])+(k, ))
+        cursor.execute("INSERT INTO availabilities (availabilityId, startTime, duration, daysInARow, fieldName) VALUES (?, ?, ?, ?, ?);", (k,)+tuple(availabilitiesList[k]))
+    
+    connexion.commit()
+    connexion.close()
