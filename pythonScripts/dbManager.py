@@ -5,7 +5,7 @@ separator = "%Separator%"
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
         "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerShirtNumber INTEGER, playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN DEFAULTS false);",
-        "CREATE TABLE availabilities (availabilityId INTEGER AUTOINCREMENT PRIMARY KEY, startTime DATETIME, duration INTEGER, daysInARow INTEGER, fieldName VARCHAR(50));",
+        "CREATE TABLE availabilities (availabilityId INTEGER PRIMARY KEY AUTOINCREMENT, startTime DATETIME, duration INTEGER, daysInARow INTEGER, fieldName VARCHAR(50));",
         "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchAvailabilityId VARCHAR(50) REFERENCES availabilities(availabilityId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME)",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, dateOfPointSubmit DATETIME);"
     ]
