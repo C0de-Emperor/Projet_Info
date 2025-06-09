@@ -1,11 +1,7 @@
-import sqlite3, loginManager, itertools
+import sqlite3, itertools, random, math
 from dateutil import parser
 from datetime import timedelta
-from collections import defaultdict
-import random
-
-def GetMatchesNumber (tournamentName:str) -> int:
-    return len(GetMatchesAvailabilities(tournamentName))
+from pythonScripts import loginManager
 
 def GetMatchesAvailabilities (tournamentName:str) -> list:
     matchDuration = int(loginManager.GetParamatersList(tournamentName)[1])
@@ -14,9 +10,14 @@ def GetMatchesAvailabilities (tournamentName:str) -> list:
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    availabilities = cursor.execute("""Select availabilityId, startTime, duration, daysInARow From availabilities""").fetchall()
+    availabilities = cursor.execute("""SELECT availabilityId, startTime, duration, daysInARow FROM availabilities""").fetchall()
 
     for av in availabilities:
+        av=list(av)
+        a=av[2].split("h")
+        if a[1]=="": a[1]=0
+        av[2]=int(a[0])*60+int(a[1])
+        
         if av[2]//matchDuration >= 1:
             startDate = parser.parse(str(av[1]))
             for i in range(av[2]//matchDuration):
@@ -66,8 +67,26 @@ def GetTeams (tournamentName:str) -> list:
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    teams = cursor.execute("""Select teamName From teams""").fetchall()
+    teams = cursor.execute("""SELECT teamName FROM teams""").fetchall()
     connexion.close()
 
     return [team[0] for team in teams] 
 
+def CreateMatches2(tournamentName):
+    connexion = sqlite3.connect("databases/" + tournamentName + ".db")
+    cursor = connexion.cursor()
+
+    # Données
+    availabilities = GetMatchesAvailabilities(tournamentName)
+    teams = GetTeams(tournamentName)
+    
+    combinations = list(itertools.combinations(teams, 2))
+    random.shuffle(combinations)
+    
+    # Insertion dans la base
+    for i, (team1, team2) in enumerate(combinations):
+        match_date, avail_id = availabilities[i]
+        cursor.execute("INSERT INTO matches (matchDate, matchAvailabilityId, team1Name, team2Name) VALUES (?, ?, ?, ?)", (match_date.strftime("%Y-%m-%d %H:%M:%S"), avail_id, team1, team2))
+
+    connexion.commit()
+    connexion.close()

@@ -22,6 +22,24 @@
     <span class="text">Match n°{{matchInfos[0]}} le {{matchInfos[1]}} sur le terrain {{matchInfos[2]}} opposant {{matchInfos[3]}} et {{matchInfos[4]}}</span>
   </div>
 
+  {% if matchInfos[5]==None %}
+
+    <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="playerIdButton" value="startMatch">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text"> Démarrer le match </span>
+      </button>
+
+  {% else %}
+
+  <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="playerIdButton" value="endMatch">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text"> Match fini </span>
+  </button>
+
   <div class="control block-cube block-input">
     <input type="text" name="pointsScored" placeholder="Nombre de points marqués" value="{{ parametersList[4] }}">
     <div class="bg-top"><div class="bg-inner"></div></div>
@@ -55,6 +73,8 @@
 
   {% endfor %}
   </div>
+
+  {% endif %}
 
 </form>
 {% endblock %}

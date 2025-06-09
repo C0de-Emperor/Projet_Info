@@ -5,14 +5,14 @@ separator = "%Separator%"
 createDatabaseInstructions = [
         "CREATE TABLE teams (teamName VARCHAR(50) PRIMARY KEY, teamPassword VARCHAR(20));",
         "CREATE TABLE players (playerId  INTEGER PRIMARY KEY AUTOINCREMENT, playerName VARCHAR(50), playerFirstName VARCHAR(20), playerShirtNumber INTEGER, playerTeam VARCHAR(50) REFERENCES teams(teamName), isTeamChief BOOLEAN DEFAULTS false);",
-        "CREATE TABLE availabilities (availabilityId INTEGER AUTOINCREMENT PRIMARY KEY, startTime DATETIME, duration INTEGER, daysInARow INTEGER, fieldName VARCHAR(50));",
-        "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchAvailabilityId VARCHAR(50) REFERENCES availabilities(availabilityId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME)",
+        "CREATE TABLE availabilities (availabilityId INTEGER PRIMARY KEY AUTOINCREMENT, startTime DATETIME, duration VARCHAR(5), daysInARow INTEGER, fieldName VARCHAR(50));",
+        "CREATE TABLE matches (matchId INTEGER PRIMARY KEY AUTOINCREMENT, matchDate DATETIME, matchAvailabilityId VARCHAR(50) REFERENCES availabilities(availabilityId), team1Name VARCHAR(50) REFERENCES teams(teamName), team2Name VARCHAR(50) REFERENCES teams(teamName), startTime DATETIME, endTime DATETIME)",
         "CREATE TABLE points (pointId INTEGER PRIMARY KEY AUTOINCREMENT, matchId INTEGER REFERENCES matches(matchId), playerId INTEGER REFERENCES players(playerId), numberOfPoints INTEGER, dateOfPointSubmit DATETIME);"
     ]
 
 def WriteTournamentParameters(tournamentDict:dict, isTournamentStarted:bool):#tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
     with open("databases/"+tournamentDict["tournamentName"]+".txt", "w") as f:
-        for param in ["sport", "matchDuration", "teamSize", "availableSportFields", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "tournamentName"]:
+        for param in ["sport", "matchDuration", "teamSize", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "tournamentName"]:
             print([tournamentDict[param]])
             f.write(tournamentDict[param] + separator)
         f.write(isTournamentStarted+separator)
@@ -131,7 +131,7 @@ def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
 
     connexion.close()
 
-def GetMatches(tournamentName):
+def GetMatches(tournamentName, includeFinishedMatches=True):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
@@ -139,8 +139,17 @@ def GetMatches(tournamentName):
     matchesList = cursor.fetchall()
 
     connexion.close()
-
-    return matchesList
+    
+    if includeFinishedMatches==False:
+        unfinishedMatches=[]
+        
+        for k in matchesList:
+            if k[6]==None:
+                unfinishedMatches.append(k)
+        print(unfinishedMatches)
+        return unfinishedMatches
+    else:
+        return matchesList
 
 def GetMatch(tournamentName, matchId):
     matchesList=GetMatches(tournamentName)
@@ -213,17 +222,44 @@ def UpdateAvailabilities(tournamentName, availabilitiesList):
     cursor = connexion.cursor()
     
     cursor.execute("SELECT availabilityId FROM availabilities ORDER BY availabilityId DESC")
-    maxId=cursor.fetchone()[0]
+    try : maxId=cursor.fetchone()[0]
+    except: maxId=1
+    
+    for k in availabilitiesList:
+        a=k[1].split("h")
+        if a[1]=="": a[1]=0
+        try: int(a[0])*60+int(a[1])
+        except: return "invalid duration"
+        if len(a)!=2 or int(a[0])<0 or int(a[1])<0 or int(a[1])>60: return "invalid duration"
     
     print(maxId, availabilitiesList)
     
-    for k in range(maxId+1):
+    for k in range(maxId):
         print(tuple(availabilitiesList[k])+(k, ))
-        cursor.execute("UPDATE availabilities SET startTime=?, duration=?, daysInARow=?, fieldName=? WHERE availabilityId=?;", tuple(availabilitiesList[k])+(k, ))
+        cursor.execute("UPDATE availabilities SET startTime=?, duration=?, daysInARow=?, fieldName=? WHERE availabilityId=?;", tuple(availabilitiesList[k])+(k+1, ))
     
-    for k in range(maxId+1, len(availabilitiesList)):
+    for k in range(maxId, len(availabilitiesList)):
         print(tuple(availabilitiesList[k])+(k, ))
-        cursor.execute("INSERT INTO availabilities (availabilityId, startTime, duration, daysInARow, fieldName) VALUES (?, ?, ?, ?, ?);", (k,)+tuple(availabilitiesList[k]))
+        cursor.execute("INSERT INTO availabilities (availabilityId, startTime, duration, daysInARow, fieldName) VALUES (?, ?, ?, ?, ?);", (k+1,)+tuple(availabilitiesList[k]))
     
     connexion.commit()
     connexion.close()
+
+def StartMatch (tournamentName, matchId):
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+    
+    cursor.execute("UPDATE matches SET startTime=? WHERE matchId=?", (datetime.datetime.now(), matchId))
+    
+    connexion.commit()
+    connexion.close()
+
+def EndMatch (tournamentName, matchId):
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+    
+    cursor.execute("UPDATE matches SET endTime=? WHERE matchId=?", (datetime.datetime.now(), matchId))
+    
+    connexion.commit()
+    connexion.close()
+
