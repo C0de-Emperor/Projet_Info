@@ -35,7 +35,8 @@ def OrgaLogin():
         # Identifiants corrects
         if lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
             parametersList = lm.GetParamatersList(tournamentDict["tournamentName"])
-            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[9])
+            print(parametersList)
+            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[8])
 
         # Échec login
         return render_template('orgaLogin.html', error="Invalid credentials", parametersList=tournamentList)
@@ -57,7 +58,7 @@ def CreateTournament():
     if request.method=="GET":
         return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
     elif request.method=="POST":
-        inputNames = ["sport", "matchDuration", "teamSize", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "password"]
+        inputNames = ["sport", "matchDuration", "teamSize", "rankingMode", "maxTeamNumber", "points", "refereePassword", "password"]
 
         for key in inputNames:
             value = request.form.get(key)
@@ -157,7 +158,7 @@ def Availabilities ():
             return render_template("availabilities.html", tournamentName=tournamentName, availabilitiesList=[[k+1]+availabilitiesList[k] for k in range(len(availabilitiesList))], error=a)
         
         parametersList = lm.GetParamatersList(tournamentName)
-        return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[9])
+        return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[8])
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])
@@ -261,7 +262,7 @@ def RefereeMatchChoice():
         
         
         print(parameters, refereePassword)
-        if parameters[7] != refereePassword:
+        if parameters[6] != refereePassword:
             return render_template("refereeLogin.html", error="Invalid referee password", tournamentName=tournamentName)
         
         # Si tout est bon
@@ -327,12 +328,11 @@ def SpectatorLogin():
 
 @app.route("/spectator/<tournamentName>", methods=["GET", "POST"])
 def Spectator(tournamentName):
-    print(tournamentName)
     if request.method=="GET":
-        return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName))
+        return render_template("spectator.html", parametersList=[tournamentName], matchesList=dbm.GetMatches(tournamentName), rankings=dbm.EstablishRankings(tournamentName))
     elif request.method=="POST":
         matchId=request.form.get("matchIdButton")
-        return render_template("spectator.html", parametersList=[tournamentName, matchId], points=dbm.GetPoints(tournamentName, matchId))
+        return render_template("spectator.html", parametersList=[tournamentName, matchId], points=dbm.GetPoints(tournamentName, matchId), matchInfos=dbm.GetMatchInfos(tournamentName, matchId))
     
 
 @app.route('/favicon.ico', methods=["GET"])

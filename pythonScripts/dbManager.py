@@ -1,4 +1,5 @@
 import sqlite3, datetime
+from pythonScripts import loginManager as lm
 
 separator = "%Separator%"
 
@@ -12,7 +13,7 @@ createDatabaseInstructions = [
 
 def WriteTournamentParameters(tournamentDict:dict, isTournamentStarted:bool):#tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
     with open("databases/"+tournamentDict["tournamentName"]+".txt", "w") as f:
-        for param in ["sport", "matchDuration", "teamSize", "algorithm", "maxTeamNumber", "teamSelectionMethod", "points", "refereePassword", "tournamentName"]:
+        for param in ["sport", "matchDuration", "teamSize", "rankingMode", "maxTeamNumber", "points", "refereePassword", "tournamentName"]:
             print([tournamentDict[param]])
             f.write(tournamentDict[param] + separator)
         f.write(isTournamentStarted+separator)
@@ -135,19 +136,13 @@ def GetMatches(tournamentName, includeFinishedMatches=True):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT * from matches;")
+    cursor.execute("SELECT matchId, matchDate, fieldName, team1Name, team2Name, matches.startTime, endTime FROM matches INNER JOIN availabilities ON availabilityId=matchAvailabilityId;")
     matchesList = cursor.fetchall()
 
     connexion.close()
     
     if includeFinishedMatches==False:
-        unfinishedMatches=[]
-        
-        for k in matchesList:
-            if k[6]==None:
-                unfinishedMatches.append(k)
-        print(unfinishedMatches)
-        return unfinishedMatches
+        return [k for k in matchesList if k[6]==None]
     else:
         return matchesList
 
@@ -263,3 +258,60 @@ def EndMatch (tournamentName, matchId):
     connexion.commit()
     connexion.close()
 
+def EstablishRankings(tournamentName):
+    matches=GetMatches(tournamentName)
+    finishedMatches=[k for k in matches if k[6]!=None]
+    
+    winLosePoints=lm.GetParamatersList(tournamentName)[5].split("-")
+    winLosePoints=[int(k) for k in winLosePoints]
+    
+    rankingMode=lm.GetParamatersList(tournamentName)[3]
+    
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+    
+    cursor.execute("SELECT * FROM teams")
+    teams=cursor.fetchall()
+    
+    teamsRankingPoints={}
+    for k in teams:
+        teamsRankingPoints[k[0]]=0
+    
+    for k in finishedMatches:
+        teamsPoints=[]
+        for n in k[3:5]:
+            cursor.execute("SELECT SUM(numberOfPoints) FROM points INNER JOIN players ON points.playerId=players.playerId WHERE matchId=? AND players.playerTeam=?", (k[0], n))
+            teamsPoints.append(cursor.fetchone()[0])
+        
+        if rankingMode=="totalPointsScored":
+            teamsRankingPoints[k[3]]+=teamsPoints[0]
+            teamsRankingPoints[k[4]]+=teamsPoints[1]
+        else:
+            if teamsPoints[0]>teamsPoints[1]:
+                teamsRankingPoints[k[3]]+=winLosePoints[0]
+                teamsRankingPoints[k[4]]+=winLosePoints[2]
+            elif teamsPoints[0]==teamsPoints[1]:
+                teamsRankingPoints[k[3]]+=winLosePoints[1]
+                teamsRankingPoints[k[4]]+=winLosePoints[1]
+            else:
+                teamsRankingPoints[k[3]]+=winLosePoints[2]
+                teamsRankingPoints[k[4]]+=winLosePoints[0]
+    
+    ranking=list(teamsRankingPoints.items())
+    ranking.sort(reverse=True, key=lambda a:a[1])
+    
+    return ranking
+
+def GetMatchInfos(tournamentName, matchId):
+    matchInfos=GetMatch(tournamentName, matchId)
+    
+    connexion = sqlite3.connect("databases/"+tournamentName+".db")
+    cursor = connexion.cursor()
+    
+    teamsPoints=[0,0]
+    
+    for k in matchInfos[3:5]:
+        cursor.execute("SELECT SUM(numberOfPoints) FROM points INNER JOIN players ON points.playerId=players.playerId WHERE matchId=? AND players.playerTeam=?", (matchId, k))
+        teamsPoints.append(cursor.fetchone()[0])
+    
+    return list(matchInfos)+teamsPoints
