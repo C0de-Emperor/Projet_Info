@@ -22,7 +22,7 @@
     {% for k in availabilitiesList %}
     <div class="control block-cube block-input availabilityInputBox" name="{{ k[0] }}">
         <input type="datetime-local" name="date{{ k[0] }}" value="{{ k[1] }}">
-        <input type="text" name="duration{{ k[0] }}" placeholder="durée (min)" value="{{ k[2] }}">
+        <input type="text" name="duration{{ k[0] }}" placeholder="durée (format xxhxx)" value="{{ k[2] }}">
         <input type="text" name="daysInARow{{ k[0] }}" placeholder="nb de jours d'affilée" value="{{ k[3] }}">
         <input type="text" name="fieldName{{ k[0] }}" placeholder="nom du terrain" value="{{ k[4] }}">
 

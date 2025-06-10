@@ -6,10 +6,13 @@
 
 
 {% block body %}
-<form class="form" autocomplete="off" action='/spectator/{{parametersList[0]}}' method="POST" >
+<form class="form spectator" autocomplete="off" action='/spectator/{{parametersList[0]}}' method="POST" >
   <div class="control">
     <h1> {{ parametersList[0] }}</h1>
     {% if parametersList[1] %} <h3> Match n°{{parametersList[1]}} </h3> {% endif %}
+    {% if matchInfos[5]!=None %} <p>Started on {{ matchInfos[5] }}</p> {% endif %}
+    {% if matchInfos[6]!=None %} <p>Ended on {{ matchInfos[6] }}</p> {% endif %}
+    
   </div>
   
   {% if error %}
@@ -17,25 +20,81 @@
   {% endif %}
 
   {% if matchesList %}
+
+  <div class="columns">
+
+    <div class="column">
   {% for k in matchesList %}
   <button class="btn block-cube block-cube-hover refereeMatchButton" type="submit" name="matchIdButton" value="{{k[0]}}">
     <div class="bg-top"><div class="bg-inner"></div></div>
     <div class="bg-right"><div class="bg-inner"></div></div>
     <div class="bg"><div class="bg-inner"></div></div>
-    <span class="text">Match n°{{k[0]}}</span>
-    <span class="text">le {{k[1]}}</span>
-    <span class="text">sur le terrain {{k[2]}}</span>
-    <span class="text">opposant {{k[3]}}</span>
-    <span class="text">et {{k[4]}}</span>
+    <span class="text monoline">Match n°{{k[0]}}</span>
+    <span class="text monoline">{{k[1]}}</span>
+    <span class="text monoline">{{k[2]}}</span>
+    <span class="text monoline">{{k[3]}}</span>
+    <span class="text monoline">{{k[4]}}</span>
   </button>
   {% endfor %}
+  </div>
+
+  <div class="column">
+  <table class="rankingsTable">
+    <tr>
+      <th class="rankingsTableColumn">Classement</th>
+      <th class="rankingsTableColumn">Points</th>
+      <th class="rankingsTableColumn">Nom de l'équipe</th>
+    </tr>
+  
+  {% for k in rankings %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ k[1] }}</td>
+      <td class="monoline">{{ k[0] }}</td>
+    </tr>
+  {% endfor %}
+
+  </table>
+  </div>
+
+  </div>
   {% else %}
   
+  <table class="rankingsTable">
+    <tr>
+      <th class="rankingsTableColumn">Joueur</th>
+      <th class="rankingsTableColumn">Equipe</th>
+      <th class="rankingsTableColumn">Points</th>
+      <th class="rankingsTableColumn">Heure</th>
+    </tr>
+  
   {% for k in points %}
-  <div class="control">
-    <label>{{k[0]}} {{k[1]}} de {{k[2]}} a marqué {{k[3]}} points à {{k[4]}}</label>
-  </div>
+    <tr>
+      <td class="monoline rankingsTableColumn">{{ k[0] }} {{ k[1] }}</td>
+      <td class="monoline rankingsTableColumn">{{ k[2] }}</td>
+      <td class="monoline rankingsTableColumn">{{ k[3] }}</td>
+      <td class="monoline rankingsTableColumn">{{ k[4] }}</td>
+    </tr>
   {% endfor %}
+
+  </table>
+
+  <table class="rankingsTable teamTotal">
+    <tr>
+      <th>Equipe</th>
+      <th>Points</th>
+    </tr>
+
+    <tr>
+      <td class="monoline rankingsTableColumn">{{ matchInfos[3] }}</td>
+      <td>{{ matchInfos[7] }}</td>
+    </tr>
+
+    <tr>
+      <td class="monoline rankingsTableColumn">{{ matchInfos[4] }}</td>
+      <td>{{ matchInfos[8] }}</td>
+    </tr>
+  </table>
 
   {% endif %}
 

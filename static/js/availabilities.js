@@ -1,7 +1,7 @@
-var maxLineNumber=0
+var maxLineNumber=1
 
 function addLine(){
-    console.log("add a new line")
+    //console.log("add a new line")
 
     var availabilityColumn=document.getElementById("availabilityColumn");
 
@@ -66,7 +66,10 @@ function addLine(){
     div3.appendChild(subDiv)
     newDiv.appendChild(div3)
 
-    availabilityColumn.insertBefore(newDiv, availabilityColumn.childNodes[maxLineNumber+1])
+    console.log(maxLineNumber, availabilityColumn.childNodes)
+    availabilityColumn.insertBefore(newDiv, availabilityColumn.childNodes[maxLineNumber*2-1])
+
+    availabilityColumn.insertBefore(availabilityColumn.childNodes[0].cloneNode(), availabilityColumn.childNodes[maxLineNumber*2])
 
     var form = document.getElementsByTagName("form")[0]
     var formAction = form.action
@@ -116,6 +119,8 @@ function inputModified(element){
         if (targetedLine.childNodes[k].value!=""){isBoxEmpty=false;}
     }
 
+    //console.log(targetedLine.attributes[1].value, maxLineNumber)
+
     if (isBoxEmpty){
         removeLine()
     }
@@ -124,7 +129,7 @@ function inputModified(element){
         addLine()
     }
 
-    console.log(targetedLine, targetedLine.attributes[1].value, maxLineNumber)
+    //console.log(targetedLine, targetedLine.attributes[1].value, maxLineNumber)
 }
 
 function initialize(){
@@ -134,13 +139,15 @@ function initialize(){
 
         console.log(availabilityInputBox)
         for (let k=1; k<=7; k=k+2){
-            console.log(availabilityInputBox.childNodes[k])
+            //console.log(availabilityInputBox.childNodes[k])
 
             availabilityInputBox.childNodes[k].addEventListener("input", (element) => inputModified(element))
         }
     }
 
-    maxLineNumber=document.getElementsByClassName("availabilityInputBox").length-1
+    maxLineNumber=document.getElementsByClassName("availabilityInputBox").length
+
+    console.log(maxLineNumber)
 
     addLine()
 }

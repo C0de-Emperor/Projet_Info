@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<form class="form createTournament" autocomplete="off" action="/createTournament?tournamentName={{ parametersList[9] }}&isCreating={{ isCreating }}&isStarted={{ isStarted }}" method="POST">
+<form class="form createTournament" autocomplete="off" action="/createTournament?tournamentName={{ parametersList[8] }}&isCreating={{ isCreating }}&isStarted={{ isStarted }}" method="POST">
   <div class="control">
     <h1> 
       {% if isCreating %} 
@@ -45,15 +45,8 @@
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
-      <div class="control block-cube block-input">
-        <input type="text" name="availableSportFields" placeholder="Available Sports Fields" value="{{ parametersList[3] }}">
-        <div class="bg-top"><div class="bg-inner"></div></div>
-        <div class="bg-right"><div class="bg-inner"></div></div>
-        <div class="bg"><div class="bg-inner"></div></div>
-      </div>
-
-      <div class="control block-cube block-input">
-        <input type="text" name="algorithm" placeholder="Algorithm" value="{{ parametersList[4] }}">
+    <div class="control block-cube block-input">
+        <input type="text" name="rankingMode" placeholder="Ranking mode" value="{{ parametersList[3] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -62,28 +55,21 @@
 
     <div class="column">
       <div class="control block-cube block-input">
-        <input type="text" name="maxTeamNumber" placeholder="Max Team Number" value="{{ parametersList[5] }}">
+        <input type="text" name="maxTeamNumber" placeholder="Max Team Number" value="{{ parametersList[4] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="teamSelectionMethod" placeholder="Team Selection Method" value="{{ parametersList[6] }}">
+        <input type="text" name="points" placeholder="Points" value="{{ parametersList[5] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="text" name="points" placeholder="Points" value="{{ parametersList[7] }}">
-        <div class="bg-top"><div class="bg-inner"></div></div>
-        <div class="bg-right"><div class="bg-inner"></div></div>
-        <div class="bg"><div class="bg-inner"></div></div>
-      </div>
-
-      <div class="control block-cube block-input">
-        <input type="text" name="refereePassword" placeholder="referee's password" value="{{ parametersList[8] }}">
+        <input type="text" name="refereePassword" placeholder="referee's password" value="{{ parametersList[6] }}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
@@ -91,14 +77,14 @@
 
       {% if isCreating %}
       <div class="control block-cube block-input">
-        <input type="text" name="tournamentName" placeholder="Tournament Name" value={{parametersList[10]}}>
+        <input type="text" name="tournamentName" placeholder="Tournament Name" value={{parametersList[8]}}>
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
       </div>
 
       <div class="control block-cube block-input">
-        <input type="password" name="password" placeholder="Password" value="{{ parametersList[9]}}">
+        <input type="password" name="password" placeholder="Password" value="{{ parametersList[7]}}">
         <div class="bg-top"><div class="bg-inner"></div></div>
         <div class="bg-right"><div class="bg-inner"></div></div>
         <div class="bg"><div class="bg-inner"></div></div>
