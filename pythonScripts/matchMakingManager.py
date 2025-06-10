@@ -1,7 +1,11 @@
 import sqlite3, itertools, random, math
 from dateutil import parser
 from datetime import timedelta
+import random
 from pythonScripts import loginManager
+
+def GetMatchesNumber (tournamentName:str) -> int:
+    return len(GetMatchesAvailabilities(tournamentName))
 
 def GetMatchesAvailabilities (tournamentName:str) -> list:
     matchDuration = int(loginManager.GetParamatersList(tournamentName)[1])
@@ -35,7 +39,6 @@ def CreateMatches(tournamentName: str):
     availabilities = GetMatchesAvailabilities(tournamentName)
     random.shuffle(availabilities)
     teams = GetTeams(tournamentName)
-    nTeams = len(teams)
 
     # Toutes les combinaisons uniques possibles sans doublon
     unique_combinations = list(itertools.combinations(teams, 2))

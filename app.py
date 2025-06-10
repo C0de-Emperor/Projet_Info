@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from pythonScripts import loginManager as lm
 from pythonScripts import dbManager as dbm
+from pythonScripts import configManager as cm
 from pythonScripts import matchMakingManager as mmm
 
 app = Flask(__name__)
@@ -52,8 +53,6 @@ def CreateTournament():
 
     isCreating=request.args.get("isCreating") == "True"
     isStarted=request.args.get("isStarted") == "True"
-
-    print(isCreating, isStarted)
 
     if request.method=="GET":
         return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
@@ -341,4 +340,5 @@ def Favicon():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=True)
+    configs = cm.GetAppConfig()
+    app.run(host=configs["host"], port=int(configs["port"]), debug=bool(configs["debug"]), use_reloader=True)
