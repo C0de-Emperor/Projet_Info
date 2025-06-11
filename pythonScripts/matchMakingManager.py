@@ -31,41 +31,6 @@ def GetMatchesAvailabilities (tournamentName:str) -> list:
     connexion.close()
     return matches
 
-def CreateMatches(tournamentName: str):
-    connexion = sqlite3.connect("databases/" + tournamentName + ".db")
-    cursor = connexion.cursor()
-
-    # Données
-    availabilities = GetMatchesAvailabilities(tournamentName)
-    random.shuffle(availabilities)
-    teams = GetTeams(tournamentName)
-
-    # Toutes les combinaisons uniques possibles sans doublon
-    unique_combinations = list(itertools.combinations(teams, 2))
-    random.shuffle(unique_combinations)
-
-    # Ne pas dépasser le nombre de créneaux
-    selected_matches = unique_combinations[:len(availabilities)]
-
-    # Suivi des matchs joués par équipe
-    match_count = {team: 0 for team in teams}
-    for team1, team2 in selected_matches:
-        match_count[team1] += 1
-        match_count[team2] += 1
-
-    # Insertion dans la base
-    for i, (team1, team2) in enumerate(selected_matches):
-        match_date, avail_id = availabilities[i]
-        cursor.execute("""
-            INSERT INTO matches (matchDate, matchAvailabilityId, team1Name, team2Name)
-            VALUES (?, ?, ?, ?)""",
-            (match_date.strftime("%Y-%m-%d %H:%M:%S"), avail_id, team1, team2)
-        )
-
-    connexion.commit()
-    connexion.close()
-    return None
-
 def GetTeams (tournamentName:str) -> list:
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
@@ -75,7 +40,7 @@ def GetTeams (tournamentName:str) -> list:
 
     return [team[0] for team in teams] 
 
-def CreateMatches2(tournamentName):
+def CreateMatches(tournamentName):
     connexion = sqlite3.connect("databases/" + tournamentName + ".db")
     cursor = connexion.cursor()
 
@@ -86,6 +51,10 @@ def CreateMatches2(tournamentName):
     combinations = list(itertools.combinations(teams, 2))
     random.shuffle(combinations)
     
+    
+    print(len(combinations), len(availabilities))
+    if len(combinations) > len(availabilities): return False
+    
     # Insertion dans la base
     for i, (team1, team2) in enumerate(combinations):
         match_date, avail_id = availabilities[i]
@@ -93,3 +62,5 @@ def CreateMatches2(tournamentName):
 
     connexion.commit()
     connexion.close()
+
+    return True

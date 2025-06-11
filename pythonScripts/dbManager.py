@@ -216,24 +216,18 @@ def UpdateAvailabilities(tournamentName, availabilitiesList):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
     
-    cursor.execute("SELECT availabilityId FROM availabilities ORDER BY availabilityId DESC")
-    try : maxId=cursor.fetchone()[0]
-    except: maxId=0
-    
     for k in availabilitiesList:
+        if not "h" in k[1]: return "duration must be of the xxhxx format"
+        
         a=k[1].split("h")
         if a[1]=="": a[1]=0
         try: int(a[0])*60+int(a[1])
         except: return "invalid duration"
         if len(a)!=2 or int(a[0])<0 or int(a[1])<0 or int(a[1])>60: return "invalid duration"
     
-    print(maxId, availabilitiesList)
+    cursor.execute("DELETE FROM availabilities")
     
-    for k in range(maxId):
-        print(tuple(availabilitiesList[k])+(k, ))
-        cursor.execute("UPDATE availabilities SET startTime=?, duration=?, daysInARow=?, fieldName=? WHERE availabilityId=?;", tuple(availabilitiesList[k])+(k+1, ))
-    
-    for k in range(maxId, len(availabilitiesList)):
+    for k in range(len(availabilitiesList)):
         print(tuple(availabilitiesList[k])+(k, ))
         cursor.execute("INSERT INTO availabilities (availabilityId, startTime, duration, daysInARow, fieldName) VALUES (?, ?, ?, ?, ?);", (k+1,)+tuple(availabilitiesList[k]))
     
