@@ -218,7 +218,7 @@ def UpdateAvailabilities(tournamentName, availabilitiesList):
     
     cursor.execute("SELECT availabilityId FROM availabilities ORDER BY availabilityId DESC")
     try : maxId=cursor.fetchone()[0]
-    except: maxId=1
+    except: maxId=0
     
     for k in availabilitiesList:
         a=k[1].split("h")

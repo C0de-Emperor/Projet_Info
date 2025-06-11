@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<form class="form createTournament" autocomplete="off" action="/createTournament?tournamentName={{ parametersList[8] }}&isCreating={{ isCreating }}&isStarted={{ isStarted }}" method="POST">
+<form class="form createTournament" autocomplete="off" action="/createTournament?tournamentName={{ parametersList[7] }}&password={{ parametersList[9] }}&isCreating={{ isCreating }}&isStarted={{ isStarted }}" method="POST">
   <div class="control">
     <h1> 
       {% if isCreating %} 

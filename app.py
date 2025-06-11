@@ -35,9 +35,7 @@ def OrgaLogin():
 
         # Identifiants corrects
         if lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
-            parametersList = lm.GetParamatersList(tournamentDict["tournamentName"])
-            print(parametersList)
-            return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[8])
+            return redirect(url_for("CreateTournament", tournamentName=tournamentDict["tournamentName"], password=tournamentDict["password"], isCreating=False))
 
         # Échec login
         return render_template('orgaLogin.html', error="Invalid credentials", parametersList=tournamentList)
@@ -51,10 +49,14 @@ def CreateTournament():
     tournamentList=[]
     tournamentDict={}
 
+    tournamentName=request.args.get("tournamentName")
     isCreating=request.args.get("isCreating") == "True"
-    isStarted=request.args.get("isStarted") == "True"
+    tournamentList=lm.GetParamatersList(tournamentName)
+    
+    isStarted=tournamentList[8]
 
     if request.method=="GET":
+        tournamentList.append(request.args.get("password"))
         return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
     elif request.method=="POST":
         inputNames = ["sport", "matchDuration", "teamSize", "rankingMode", "maxTeamNumber", "points", "refereePassword", "password"]
@@ -99,19 +101,21 @@ def CreateTournament():
 
             return render_template("orgaLogin.html", validation="Tournament successfully created", parametersList=[])
         else:
+            tournamentList=[]
+            
             tournamentDict["tournamentName"] = request.args.get("tournamentName")
             tournamentList.append(request.args.get("tournamentName"))
+            
+            tournamentDict["password"] = request.args.get("password")
+            tournamentList.append(request.args.get("password"))
 
             tournamentDict["isTournamentStarted"]=str(isStarted)
 
             if isStarted == True:
-                return render_template(
-                    'createTournament.html',
-                    error="Tournament in progress cannot be modified.",
-                    parametersList=tournamentList,
-                    isCreating=isCreating,
-                    isStarted=isStarted
-                )
+                return render_template('createTournament.html', error="Tournament in progress cannot be modified.", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
+            
+            if not lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
+                return render_template('orgaLogin.html', error="Invalid credentials")
         
             # MODIFICATION
             action = request.form.get("action")
@@ -120,7 +124,7 @@ def CreateTournament():
                 dbm.WriteTournamentParameters(tournamentDict, "True")
                 return render_template("orgaLogin.html", validation="Tournament successfully started", parametersList=[])
             if action == "availabilities":
-                return redirect(url_for('Availabilities', tournamentName=tournamentDict["tournamentName"]))
+                return redirect(url_for('Availabilities', tournamentName=tournamentDict["tournamentName"], password=tournamentDict["password"]))
             else:
                 dbm.WriteTournamentParameters(tournamentDict, "False")
                 return render_template("orgaLogin.html", validation="Tournament successfully modified", parametersList=[])
@@ -129,14 +133,18 @@ def CreateTournament():
 @app.route('/availabilities', methods=['GET', 'POST'])
 def Availabilities ():
     tournamentName=request.args.get("tournamentName")
+    password=request.args.get("password")
     
     if request.method=="GET":
         availabilitiesList=dbm.GetAvailabilities(tournamentName)
-        
-        print(availabilitiesList)
 
-        return render_template("availabilities.html", tournamentName=tournamentName, availabilitiesList=availabilitiesList)
+        return render_template("availabilities.html", tournamentName=tournamentName, password=password, availabilitiesList=availabilitiesList)
     elif request.method=="POST":
+        if not lm.IsLoginCorrect(tournamentName, password):
+            return render_template('orgaLogin.html', error="Invalid credentials")
+        if lm.GetParamatersList(tournamentName)[8]=="True":
+            return render_template('orgaLogin.html', error="Started tournaments cant be modified")
+        
         availabilitiesList=[]
         availabilitiesNumber=request.args.get("availabilitiesNumber")
         for k in range(1, int(availabilitiesNumber)):
@@ -157,6 +165,7 @@ def Availabilities ():
             return render_template("availabilities.html", tournamentName=tournamentName, availabilitiesList=[[k+1]+availabilitiesList[k] for k in range(len(availabilitiesList))], error=a)
         
         parametersList = lm.GetParamatersList(tournamentName)
+        parametersList.append(password)
         return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[8])
 
 
