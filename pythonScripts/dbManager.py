@@ -201,11 +201,11 @@ def AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers):
 
     connexion.close()
 
-def GetAvailabilities(tournamentName):
+def GetAvailabilities(tournamentName:str):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT * FROM availabilities")
+    cursor.execute("""SELECT * FROM availabilities""")
     availabilitiesList=cursor.fetchall()
 
     connexion.close()

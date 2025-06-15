@@ -116,7 +116,6 @@ def CreateTournament():
             if isStarted == True:
                 return render_template('createTournament.html', error="Tournament in progress cannot be modified.", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
             
-            print(tournamentDict)
             if not lm.IsLoginCorrect(tournamentDict["tournamentName"], tournamentDict["password"]):
                 return render_template('orgaLogin.html', error="Invalid credentials")
         
@@ -314,12 +313,15 @@ def Referee():
             
         
         pointsScored = request.form.get("pointsScored")
+        if pointsScored == "":
+            matchTeams=[dbm.GetTeamPlayers(tournamentName, k) for k in dbm.GetMatch(tournamentName, matchId)[3:5]]
+            return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), teams=matchTeams, error="Invalid Point Value")
 
         result=dbm.AddPoint(tournamentName, matchId, playerId, pointsScored)
 
-        if result!="": 
-            print(result)
-            return "<h1> MEH </h1>"
+        if result!="":
+            matchTeams=[dbm.GetTeamPlayers(tournamentName, k) for k in dbm.GetMatch(tournamentName, matchId)[3:5]]
+            return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), teams=matchTeams, error=result)
         
         matchTeams=[dbm.GetTeamPlayers(tournamentName, k) for k in dbm.GetMatch(tournamentName, matchId)[3:5]]
         return render_template("referee.html", parametersList=[tournamentName, refereePassword, matchId], matchInfos=dbm.GetMatch(tournamentName, matchId), teams=matchTeams, validation="point enregistré avec succès")
@@ -335,11 +337,11 @@ def SpectatorLogin():
     if request.method=="GET":
         return render_template("spectatorLogin.html")
     elif request.method == "POST":
-        tournamentName=request.form.get("tournamentName")
+        tournamentName = request.form.get("tournamentName")
         if lm.IsExistingTournament(tournamentName):
             return redirect(url_for("Spectator", tournamentName=tournamentName))
         else:
-            return render_template("spectatorLogin.html")
+            return render_template("spectatorLogin.html", error="Tournoi Inconnu")
 
 
 @app.route("/spectator/<tournamentName>", methods=["GET", "POST"])
