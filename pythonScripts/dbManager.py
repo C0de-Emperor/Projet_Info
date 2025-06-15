@@ -14,7 +14,6 @@ createDatabaseInstructions = [
 def WriteTournamentParameters(tournamentDict:dict, isTournamentStarted:bool):#tournamentName:str, _sport:str, _duration:str, _teamSize:str, _terrain:str, _algo:str, _maxTeam:str, _selection:str, _points:str, _refP:str, tournamentAccessibilityState:bool): 
     with open("databases/"+tournamentDict["tournamentName"]+".txt", "w") as f:
         for param in ["sport", "matchDuration", "teamSize", "rankingMode", "maxTeamNumber", "points", "refereePassword", "tournamentName"]:
-            print([tournamentDict[param]])
             f.write(tournamentDict[param] + separator)
         f.write(isTournamentStarted+separator)
 
@@ -302,7 +301,7 @@ def GetMatchInfos(tournamentName, matchId):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
     
-    teamsPoints=[0,0]
+    teamsPoints=[]
     
     for k in matchInfos[3:5]:
         cursor.execute("SELECT SUM(numberOfPoints) FROM points INNER JOIN players ON points.playerId=players.playerId WHERE matchId=? AND players.playerTeam=?", (matchId, k))

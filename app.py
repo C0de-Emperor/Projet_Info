@@ -51,14 +51,17 @@ def CreateTournament():
 
     tournamentName=request.args.get("tournamentName")
     isCreating=request.args.get("isCreating") == "True"
-    tournamentList=lm.GetParamatersList(tournamentName)
-    
-    isStarted=tournamentList[8]
 
     if request.method=="GET":
-        tournamentList.append(request.args.get("password"))
-        return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted)
+        if isCreating:
+            return render_template("createTournament.html", parametersList=tournamentList, isCreating=True, isStarted=False)
+        else:
+            tournamentList=lm.GetParamatersList(tournamentName)
+            isStarted=tournamentList[8]
+            tournamentList.append(request.args.get("password"))
+            return render_template("createTournament.html", parametersList=tournamentList, isCreating=False, isStarted=isStarted)
     elif request.method=="POST":
+        isStarted=False
         tournamentList=[]
         
         inputNames = ["sport", "matchDuration", "teamSize", "rankingMode", "maxTeamNumber", "points", "refereePassword", "password"]
@@ -102,6 +105,8 @@ def CreateTournament():
 
             return render_template("orgaLogin.html", validation="Tournament successfully created", parametersList=[])
         else:
+            isStarted=lm.GetParamatersList(tournamentName)[8]=="True"
+            print(isStarted)
             del tournamentList[7]
             
             tournamentDict["tournamentName"] = request.args.get("tournamentName")

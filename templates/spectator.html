@@ -10,8 +10,10 @@
   <div class="control">
     <h1> {{ parametersList[0] }}</h1>
     {% if parametersList[1] %} <h3> Match n°{{parametersList[1]}} </h3> {% endif %}
-    {% if matchInfos[5]!=None %} <p>Started on {{ matchInfos[5] }}</p> {% endif %}
-    {% if matchInfos[6]!=None %} <p>Ended on {{ matchInfos[6] }}</p> {% endif %}
+    {% if matchInfos %}
+      {% if matchInfos[5]!=None %} <p>Started on {{ matchInfos[5] }}</p> {% endif %}
+      {% if matchInfos[6]!=None %} <p>Ended on {{ matchInfos[6] }}</p> {% endif %}
+    {% endif %}
     
   </div>
   
