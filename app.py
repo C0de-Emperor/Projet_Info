@@ -23,6 +23,7 @@ def OrgaLogin():
 
         for key in inputNames:
             value = request.form.get(key)
+            if value==None: value=""
             tournamentDict[key] = value
             tournamentList.append(value)
 
@@ -68,6 +69,7 @@ def CreateTournament():
 
         for key in inputNames:
             value = request.form.get(key)
+            if value==None: value=""
             tournamentDict[key] = value
             tournamentList.append(value)
         
@@ -211,6 +213,10 @@ def CreateTeam():
         teamPlayers=[]
         for k in range(numberOfPlayers):
             teamPlayers.append([request.form.get(i+str(k)) for i in ["teamMemberFirstName", "teamMemberLastName", "teamMemberShirtNumber"]])
+            
+        for k in teamPlayers:
+            for n in k:
+                if n[0]=="" or n[1]=="": render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=isCreating)
 
         if isCreating:
             teamName=request.form.get("teamName")
@@ -244,10 +250,10 @@ def ChiefTeamLogin():
         teamDict={}
         teamList=[]
         for k in ["tournamentName", "teamName", "teamPassword", "tournamentNameR"]:
-            temp=request.form.get(k)
-            if temp==None: temp=""
-            teamDict[k]=temp
-            teamList.append(temp)
+            value=request.form.get(k)
+            if value==None: value=""
+            teamDict[k]=value
+            teamList.append(value)
         
         if action=="create":
             # Vérifie si le tournoi existe
