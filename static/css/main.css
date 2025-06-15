@@ -193,7 +193,9 @@
     opacity: 1;
   }
 
-  .form.createTournament {
+  .form.createTournament,
+  .form.referee,
+  .form.teamLogin{
     width: 620px;
   }
 
@@ -207,13 +209,10 @@
     overflow-x: auto;
   }
 
-  .form.referee {
-    width: 620px;
-  }
-
   .referee .columns,
   .createTeam .columns,
-  .createTournament .columns{
+  .createTournament .columns,
+  .teamLogin .columns{
     display: flex;
     justify-content: space-between;
     gap: 20px;
@@ -227,7 +226,7 @@
   
   .referee .column,
   .createTeam .column,
-  .createTournament .column {
+  .createTournament .column{
     width: 300px;
   }
   
@@ -361,4 +360,8 @@
 
   .teamTotal{
     padding-top: 50px;
+  }
+
+  .teamLogin .column{
+    flex-grow: 1;
   }
