@@ -27,7 +27,7 @@ Elle est développée avec **Flask (Python)** et utilise **HTML**, **CSS** et **
 
 ## ⚙️ Personnalisation
 
-Le fichier `config.txt` situé à la racine du projet permet de modifier certains paramètres de l’application.
+Le fichier `config.txt` situé à la racine du app.exe permet de modifier certains paramètres de l’application.
 
 ## 👤 Auteurs
 
