@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+
+{% block body %}
+<form class="form teamLogin" autocomplete="off" action='/chiefTeamLogin' method="POST" >
+  <div class="control">
+    <h1>Sign In</h1>
+  </div>
+
+  {% if error %}
+      <p style="color: red;">{{ error }}</p>
+  {% endif %}
+  {% if validation %}
+      <p style="color: green;">{{ validation }}</p>
+  {% endif %}
+
+  <div class="columns">
+
+    <div class="column">
+
+  <div class="control block-cube block-input">
+    <input type="text" name="tournamentName" placeholder="Tournament Name" value="{{ parametersList[0] }}">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+
+  <div class="control block-cube block-input">
+    <input type="text" name="teamName" placeholder="Team Name" value="{{ parametersList[1] }}">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+
+  <div class="control block-cube block-input">
+    <input type="password" name="teamPassword" placeholder="Password" value="{{ parametersList[2] }}">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+
+  <button class="btn block-cube block-cube-hover refereeMatchButton" name="action" value="logIn" type="submit">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+    <span class="text">Log In</span>
+  </button>
+
+</div class="column">
+
+<div class="column">
+
+  <div class="control block-cube block-input">
+    <input type="text" name="tournamentNameR" placeholder="Tournament Name" value="{{ parametersList[3] }}">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+  </div>
+
+  <button class="btn block-cube block-cube-hover refereeMatchButton" name="action" value="create" type="submit">
+    <div class="bg-top"><div class="bg-inner"></div></div>
+    <div class="bg-right"><div class="bg-inner"></div></div>
+    <div class="bg"><div class="bg-inner"></div></div>
+    <span class="text">Create new team</span>
+  </button>
+
+</div class="column">
+
+</div class="columns">
+
+</form>
+{% endblock %}

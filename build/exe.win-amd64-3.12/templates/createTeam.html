@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Create new Team</title>
+{% endblock %}
+
+{% block body %}
+
+
+<div id="createTeamError">
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+</div>
+<form class="form createTeam" autocomplete="off" action='/createTeam?tournamentName={{ parametersList[0] }}&teamName={{ parametersList[1] }}&teamPassword={{ parametersList[2] }}&isCreating={{ isCreating }}' method="POST" >
+  <div class="columns">
+    <div class="column">
+      <h1> {{ parametersList[0] }}</h1>
+
+      <h3>{{ parametersList[1] }}</h3>
+
+
+      {% if isCreating %}
+
+      <div class="control block-cube block-input">
+        <input type="password" name="teamPassword" placeholder="Team password">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <button class="btn block-cube block-cube-hover" type="submit">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Create Team</span>
+      </button>
+
+      {% else %}
+
+      <button class="btn block-cube block-cube-hover" type="submit">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Update Team</span>
+      </button>
+      
+      {% endif %}
+    </div>
+
+
+    <div class="scrollable-column playersColumn">
+
+      <div class="columns">
+        <div class="control block-cube block-input column">
+          <input type="text" name="teamMemberFirstName0" placeholder="Team Chief First Name" value="{{ players[0][0] }}">
+          <div class="bg-top"><div class="bg-inner"></div></div>
+          <div class="bg-right"><div class="bg-inner"></div></div>
+          <div class="bg"><div class="bg-inner"></div></div>
+        </div>
+
+        <div class="control block-cube block-input column">
+          <input type="text" name="teamMemberLastName0" placeholder="Team Chief Last Name" value="{{ players[0][1] }}">
+          <div class="bg-top"><div class="bg-inner"></div></div>
+          <div class="bg-right"><div class="bg-inner"></div></div>
+          <div class="bg"><div class="bg-inner"></div></div>
+        </div>
+
+        <div class="control block-cube block-input column">
+          <input type="text" name="teamMemberShirtNumber0" placeholder="Team Chief Shirt Number" value="{{ players[0][2] }}">
+          <div class="bg-top"><div class="bg-inner"></div></div>
+          <div class="bg-right"><div class="bg-inner"></div></div>
+          <div class="bg"><div class="bg-inner"></div></div>
+        </div>
+
+      </div>
+
+      {% for k in range(1, players|length) %}
+        <div class="columns">
+          <div class="control block-cube block-input column">
+            <input type="text" name="teamMemberFirstName{{ k }}" placeholder="Team member n°{{ k + 1 }} First Name" value="{{ players[k][0] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+          </div>
+
+          <div class="control block-cube block-input column">
+            <input type="text" name="teamMemberLastName{{ k }}" placeholder="Team member n°{{ k + 1 }} Last Name" value="{{ players[k][1] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+          </div>
+
+          <div class="control block-cube block-input column">
+            <input type="text" name="teamMemberShirtNumber{{ k }}" placeholder="Team member n°{{ k + 1 }} Shirt Number" value="{{ players[k][2] }}">
+            <div class="bg-top"><div class="bg-inner"></div></div>
+            <div class="bg-right"><div class="bg-inner"></div></div>
+            <div class="bg"><div class="bg-inner"></div></div>
+          </div>
+        </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</form>
+{% endblock %}

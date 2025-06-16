@@ -1,0 +1,367 @@
+*, ::after, ::before {
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: #212121;
+    color: #fff;
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+  }
+
+#changingTeamInput,
+#changingTournamentInput{
+  visibility: hidden;
+}
+
+#createTeamError{
+  margin-top: 50px;
+  text-align: center;
+}
+
+.refereeMatchButton{
+  margin-bottom: 20px;
+}
+
+  h1 {
+    font-size: 23px;
+  }
+  
+  .form {
+    width: 300px;
+    padding: 64px 15px 24px;
+    margin: 0 auto;
+  }
+
+  .form.index-form {
+    width: 300px;
+    padding: 30px 15px 1px;
+    margin: 0 auto;
+  }
+
+  .div.index-div{
+    padding-top: 100px;
+  }
+  
+  .form .control {
+    margin: 0 0 24px;
+  }
+  
+  .form .control input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+  }
+  
+  .form .control input:hover,
+  .form .control input:focus {
+    outline: none;
+    border: 0;
+  }
+  
+  .form .btn {
+    width: 100%;
+    display: block;
+    padding: 14px 16px;
+    background: transparent;
+    outline: none;
+    border: 0;
+    color: #fff;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
+  }
+  
+  .block-cube {
+    position: relative;
+  }
+  
+  .block-cube .bg-top {
+    position: absolute;
+    height: 10px;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(52,9,121,1) 37%, rgba(0,212,255,1) 94%);
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+  }
+  
+  .block-cube .bg-top .bg-inner {
+    bottom: 0;
+  }
+  
+  .block-cube .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(52,9,121,1) 37%, rgba(0,212,255,1) 94%);
+  }
+  
+  .block-cube .bg-right {
+    position: absolute;
+    background: rgba(0,212,255,1);
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+  }
+  
+  .block-cube .bg-right .bg-inner {
+    left: 0;
+  }
+  
+  .block-cube .bg .bg-inner {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .block-cube .bg-inner {
+    background: #212121;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+  }
+  
+  .block-cube .text {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .block-cube.block-input input {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .block-cube.block-input input:focus ~ .bg-right .bg-inner,
+  .block-cube.block-input input:focus ~ .bg-top .bg-inner,
+  .block-cube.block-input input:focus ~ .bg-inner .bg-inner {
+    top: 100%;
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  .block-cube.block-input .bg-top,
+  .block-cube.block-input .bg-right,
+  .block-cube.block-input .bg {
+    background: rgba(255, 255, 255, 0.5);
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .block-cube.block-input .bg-right .bg-inner,
+  .block-cube.block-input .bg-top .bg-inner {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .block-cube.block-input:focus .bg-top,
+  .block-cube.block-input:focus .bg-right,
+  .block-cube.block-input:focus .bg,
+  .block-cube.block-input:hover .bg-top,
+  .block-cube.block-input:hover .bg-right,
+  .block-cube.block-input:hover .bg {
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .block-cube.block-cube-hover:focus .bg .bg-inner,
+  .block-cube.block-cube-hover:hover .bg .bg-inner {
+    top: 100%;
+  }
+  
+  .create {
+    margin-top: 20px; /* espace au-dessus */
+    text-align: center; /* centrer le texte si besoin */
+  }
+  
+  .create a {
+    opacity: 0.6;
+    color: #fff;
+    font-size: 11px;
+    text-decoration: none;
+  }
+  
+  .create a:hover {
+    opacity: 1;
+  }
+
+  .form.createTournament,
+  .form.referee,
+  .form.teamLogin{
+    width: 620px;
+  }
+
+  .form.createTeam {
+    display: flex;
+    justify-content: center;
+    padding: 20px 15px 24px;
+    margin: 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .referee .columns,
+  .createTeam .columns,
+  .createTournament .columns,
+  .teamLogin .columns{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .spectator .columns{
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+  }
+  
+  .referee .column,
+  .createTeam .column,
+  .createTournament .column{
+    width: 300px;
+  }
+  
+  .createTeam .column .control input,
+  .createTournament .column .control input,
+  .playersColumn{
+    width: 100%;
+  }
+
+  .nav {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+  
+  .btn-home {
+    display: inline-block;
+    padding: 12px 20px;
+    color: #fff;
+    font-family: monospace;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    background: transparent;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .btn-home .text {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .btn-home:hover {
+    color: #000;
+  }
+
+  .checkbox-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    font-family: monospace;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px 0;
+    user-select: none;
+  }
+  
+  .custom-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border: 2px solid #00d4ff;
+    border-radius: 3px;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .custom-checkbox:checked {
+    background: #00d4ff;
+    box-shadow: 0 0 6px #00d4ff;
+  }
+  
+  .custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid #000;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .playerShirtText{
+    white-space: nowrap;
+  }
+
+  .scrollable-column {
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 20px 0 0; /* top, right, bottom, left */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 136, 136, 0.6) transparent;
+  }
+  
+  
+  /* WebKit (Chrome, Edge, Safari) */
+  .scrollable-column::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollable-column::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollable-column::-webkit-scrollbar-thumb {
+    background-color: rgba(136, 136, 136, 0.6);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+  }
+  
+  .scrollable-column::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(85, 85, 85, 0.8);
+  }
+
+  .monoline{
+    white-space: nowrap;
+  }
+
+  .rankingsTable{
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .rankingsTableColumn{
+    padding-right: 20px;
+  }
+
+  .teamTotal{
+    padding-top: 50px;
+  }
+
+  .teamLogin .column{
+    flex-grow: 1;
+  }

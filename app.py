@@ -1,10 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+import jinja2.ext, os, sys
 from pythonScripts import loginManager as lm
 from pythonScripts import dbManager as dbm
 from pythonScripts import configManager as cm
 from pythonScripts import matchMakingManager as mmm
 
-app = Flask(__name__)
+if getattr(sys, 'frozen', False):
+    base_dir = os.path.dirname(sys.executable)
+else:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(__name__, template_folder=os.path.join(base_dir, 'templates'), static_folder=os.path.join(base_dir, 'static'))
+
+# Cette solution a été trouvée sur internet afin de pouvoir compiler app.py avec la library cx_freeze et que flask continue à fonctionner (malgré le changement de dossier source)
 
 
 @app.route('/')
@@ -392,4 +400,4 @@ def Favicon():
 
 if __name__ == '__main__':
     configs = cm.GetAppConfig()
-    app.run(host=configs["host"], port=int(configs["port"]), debug=bool(configs["debug"]), use_reloader=True)
+    app.run(host=configs["host"], port=int(configs["port"]), debug=configs["debug"]=="True", use_reloader=True)
