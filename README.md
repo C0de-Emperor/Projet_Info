@@ -22,21 +22,18 @@ Elle est développée avec **Flask (Python)** et utilise **HTML**, **CSS** et **
 
 1. Télécharger le projet (ou cloner le dépôt)
 2. Lancer simplement le fichier `app.exe`
-3. Ouvrir un navigateur à l’adresse indiquée dans la console (généralement `http://127.0.0.1:5000`)
+3. Ouvrir un navigateur à l’adresse indiquée dans la console (exemple : `http://127.0.0.1:5000`)
 4. Pour en savoir plus, consulter le guide utilisateur 👉 [Lien vers doc]
 
 ## ⚙️ Personnalisation
 
-Le fichier `config.txt` situé à la racine du projet permet de modifier certains paramètres de l’application (ex: nombre de joueurs, règles, etc.).
+Le fichier `config.txt` situé à la racine du projet permet de modifier certains paramètres de l’application.
 
-## 👤 Auteur
+## 👤 Auteurs
 
-- **Nom Prénom** – Développeur principal
-- [Ton GitHub ou email si tu veux le mettre]
-
-## 📄 Licence
-
-Ce projet est distribué sous licence [choisis une licence, ex: MIT, GPL, etc.].
+- **Mallet Mattéo**
+- **Mauuary-Maetz Emile**
+- **Dubois Marylou**
 
 ---
 
