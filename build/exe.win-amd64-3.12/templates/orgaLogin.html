@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+
+{% block body %}
+<form class="form" autocomplete="off" action='/orgaLogin?isCreating=False' method="POST" >
+    <div class="control">
+      <h1>Sign In</h1>
+    </div>
+
+  {% if error %}
+      <p style="color: red;">{{ error }}</p>
+  {% endif %}
+  {% if validation %}
+      <p style="color: green;">{{ validation }}</p>
+  {% endif %}
+
+    <div class="control block-cube block-input">
+      <input type="text" name="tournamentName" placeholder="Tournament Name" value="{% if parametersList %}{{ parametersList[1] }}{% endif %}">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <div class="control block-cube block-input">
+      <input type="password" name="password" placeholder="Password" value="{% if parametersList %}{{ parametersList[0] }}{% endif %}">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+    </div>
+
+    <button class="btn block-cube block-cube-hover" type="submit">
+      <div class="bg-top"><div class="bg-inner"></div></div>
+      <div class="bg-right"><div class="bg-inner"></div></div>
+      <div class="bg"><div class="bg-inner"></div></div>
+      <span class="text">Log In</span>
+    </button>
+
+    <div class="create">
+      <a href="/createTournament?isCreating=True&isStarted=False">Create new Tournament</a>
+    </div>
+</form>
+{% endblock %}

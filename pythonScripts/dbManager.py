@@ -121,6 +121,8 @@ def IsTeamLoginCorrect (tournamentName:str, teamName:str, teamPassword:str) -> b
 def UpdateTeam (tournamentName:str, teamName:str, teamPlayers:str):
     connexion = sqlite3.connect("databases/"+tournamentName+".db")
     cursor = connexion.cursor()
+    
+    print(teamName)
 
     cursor.execute("SELECT MIN(playerId) FROM players WHERE playerTeam=?", (teamName, ))
     minPlayerId=cursor.fetchone()[0]
