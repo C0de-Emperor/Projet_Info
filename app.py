@@ -81,6 +81,8 @@ def CreateTournament():
             tournamentDict[key] = value
             tournamentList.append(value)
         
+        if not isCreating: tournamentDict["password"]=" "
+        
         # Champs vides ou non-authorisés
         for key, value in tournamentDict.items():
             if value == "":
@@ -189,7 +191,6 @@ def Availabilities ():
         parametersList = lm.GetParamatersList(tournamentName)
         parametersList.append(password)
         return render_template("createTournament.html", parametersList=parametersList, isCreating=False, isStarted=parametersList[8])
-
 
 
 @app.route('/createTeam', methods=['GET', 'POST'])

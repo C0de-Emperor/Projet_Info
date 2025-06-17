@@ -11,5 +11,5 @@ setup(
     version="1.0",
     description="Site web réalisé en python afin de gérer des tournois sportifs.",
     options={"build_exe": build_exe_options},
-    executables=[{"script": "app.py", "base": "console"}],
+    executables=[{"script": "app.py", "base": "console", "icon":"static/favicon.ico"}],
 )
