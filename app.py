@@ -89,6 +89,13 @@ def CreateTournament():
                 return render_template("createTournament.html",parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error=f"{key} is empty",)
             if value!=None and dbm.separator in value:
                 return render_template("createTournament.html", parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error=f"{key} presents an unauthorized string : "+dbm.separator)
+        
+        temp=tournamentDict["points"].split("-")
+        if len(temp)!=3: return render_template("createTournament.html",parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="points must be of the v-n-d format")
+        for k in temp:
+            if k=="" or " " in k: return render_template("createTournament.html",parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="points must be of the v-n-d format")
+            try: int(k)
+            except: return render_template("createTournament.html",parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="points must be of the v-n-d format")
 
         # Vérif type numérique
         try:
