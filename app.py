@@ -118,7 +118,6 @@ def CreateTournament():
             return render_template("orgaLogin.html", validation="Tournament successfully created", parametersList=[])
         else:
             isStarted=lm.GetParamatersList(tournamentName)[8]=="True"
-            print(isStarted)
             del tournamentList[7]
             
             tournamentDict["tournamentName"] = request.args.get("tournamentName")
@@ -222,10 +221,9 @@ def CreateTeam():
         teamPlayers=[]
         for k in range(numberOfPlayers):
             teamPlayers.append([request.form.get(i+str(k)) for i in ["teamMemberFirstName", "teamMemberLastName", "teamMemberShirtNumber"]])
-            
+        
         for k in teamPlayers:
-            for n in k:
-                if n[0]=="" or n[1]=="": render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=isCreating)
+            if k[0]=="" or k[1]=="": render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=isCreating)
 
         if isCreating:
             teamName=request.form.get("teamName")
@@ -269,10 +267,11 @@ def ChiefTeamLogin():
             if not lm.IsExistingTournament(teamDict["tournamentNameR"]):
                 return render_template("chiefTeamLogin.html", error="Invalid Tournament Name", parametersList=[])
             
+            if lm.GetParamatersList(teamDict["tournamentNameR"])[8]=="True":
+                return render_template("chiefTeamLogin.html", error="Tournament already started, inscriptions closed", parametersList=[])
+            
             return redirect(url_for("CreateTeam", tournamentName=teamDict["tournamentNameR"], isCreating=True))
         elif action=="logIn":
-            
-
             # Vérifie que tous les champs sont remplis
             for (key, value) in teamDict.items():
                 if value=="": render_template("chiefTeamLogin.html", error=key+" is empty", parametersList=teamList)
