@@ -278,6 +278,9 @@ def EstablishRankings(tournamentName):
             cursor.execute("SELECT SUM(numberOfPoints) FROM points INNER JOIN players ON points.playerId=players.playerId WHERE matchId=? AND players.playerTeam=?", (k[0], n))
             teamsPoints.append(cursor.fetchone()[0])
         
+        for n in range(len(teamsPoints)):
+            if teamsPoints[n]==None: teamsPoints[n]=0
+        
         if rankingMode=="totalPointsScored":
             teamsRankingPoints[k[3]]+=teamsPoints[0]
             teamsRankingPoints[k[4]]+=teamsPoints[1]

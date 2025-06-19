@@ -104,6 +104,9 @@ def CreateTournament():
             int(tournamentDict["maxTeamNumber"])
         except ValueError:
             return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="Invalid data type: matchDuration, and maxTeamNumber must be integers.")
+        
+        if tournamentDict["matchDuration"]<=0 or tournamentDict["teamSize"]<=0 or tournamentDict["maxTeamNumber"]<=0:
+            return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="Invalid data type: matchDuration, and maxTeamNumber must be positive.")
 
         if isCreating:
             tournamentDict["tournamentName"]=request.form.get("tournamentName")
@@ -149,7 +152,7 @@ def CreateTournament():
                 
                 createMatchAttempt=mmm.CreateMatches(tournamentDict["tournamentName"])
                 
-                if createMatchAttempt==False: return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=False, error="Too many teams/matches for the availabilities specified.")
+                if createMatchAttempt!=True: return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=False, error=createMatchAttempt)
                 
                 dbm.WriteTournamentParameters(tournamentDict, "True")
                 return render_template("orgaLogin.html", validation="Tournament successfully started", parametersList=[])
@@ -225,25 +228,31 @@ def CreateTeam():
         teamPlayers=[]
         for k in range(numberOfPlayers):
             teamPlayers.append([request.form.get(i+str(k)) for i in ["teamMemberFirstName", "teamMemberLastName", "teamMemberShirtNumber"]])
-        
-        for k in teamPlayers:
-            if k[0]=="" or k[1]=="": render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=isCreating)
 
         if isCreating:
             teamName=request.form.get("teamName")
             teamPassword=request.form.get("teamPassword")
             
+            if teamName=="": return render_template("createTeam.html", error="Team name cant be empty", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=True)
+            if teamPassword=="": return render_template("createTeam.html", error="team password cant be empty", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=True)
+            
+            for k in teamPlayers:
+                if k[0]=="" or k[1]=="": return render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=isCreating)
+            
             if not lm.IsUniqueTeamId(teamName, tournamentName):
-                return render_template("createTeam.html", error="Team name already taken", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=True)
+                return render_template("createTeam.html", error="Team name already taken", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=True)
             
             dbm.AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers)
         else:
             teamName=request.args.get("teamName")
             teamPassword=request.args.get("teamPassword")
+                                          
+            for k in teamPlayers:
+                if k[0]=="" or k[1]=="": return render_template("createTeam.html", error="Empty player name", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=isCreating)
             
             # Vérifie l'identité de l'équipe
             if not dbm.IsTeamLoginCorrect(tournamentName, teamName, teamPassword):
-                return render_template("createTeam.html", error="Invalid Password", parametersList=[tournamentName, teamName], players=teamPlayers, isCreating=False)
+                return render_template("createTeam.html", error="Invalid Password", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=False)
 
         dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
 

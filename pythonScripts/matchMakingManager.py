@@ -52,8 +52,8 @@ def CreateMatches(tournamentName):
     random.shuffle(combinations)
     
     
-    print(len(combinations), len(availabilities))
-    if len(combinations) > len(availabilities): return False
+    if len(combinations) > len(availabilities): return "Too many teams/matches for the availabilities specified."
+    if len(teams)<=3: return "not enough teams to start the tournament."
     
     # Insertion dans la base
     for i, (team1, team2) in enumerate(combinations):
