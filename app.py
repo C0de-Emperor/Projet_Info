@@ -179,15 +179,12 @@ def Availabilities ():
         availabilitiesNumber=request.args.get("availabilitiesNumber")
         for k in range(1, int(availabilitiesNumber)):
             currentAvailability=[]
-            print("date"+str(k))
             currentAvailability.append(request.form.get("date"+str(k)))
             currentAvailability.append(request.form.get("duration"+str(k)))
             currentAvailability.append(request.form.get("daysInARow"+str(k)))
             currentAvailability.append(request.form.get("fieldName"+str(k)))
             
             availabilitiesList.append(currentAvailability)
-        
-        print(availabilitiesList)
         
         a=dbm.UpdateAvailabilities(tournamentName, availabilitiesList)
         
@@ -241,7 +238,6 @@ def CreateTeam():
             
             dbm.AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers)
         else:
-            print('wtf')
             teamName=request.args.get("teamName")
             teamPassword=request.args.get("teamPassword")
             
@@ -322,8 +318,6 @@ def RefereeMatchChoice():
         except Exception as e:
             return render_template("refereeLogin.html", error="Tournament not found", tournamentName=tournamentName)
         
-        
-        print(parameters, refereePassword)
         if parameters[6] != refereePassword:
             return render_template("refereeLogin.html", error="Invalid referee password", tournamentName=tournamentName)
         
@@ -344,8 +338,6 @@ def Referee():
     refereePassword=request.args.get("refereePassword")
     matchId=request.args.get("matchId")
     if request.method=="POST":
-
-        print(tournamentName, refereePassword, matchId)
 
         playerId = request.form.get("playerIdButton")
         
