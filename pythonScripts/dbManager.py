@@ -295,8 +295,15 @@ def EstablishRankings(tournamentName):
                 teamsRankingPoints[k[3]]+=winLosePoints[2]
                 teamsRankingPoints[k[4]]+=winLosePoints[0]
     
-    ranking=list(teamsRankingPoints.items())
-    ranking.sort(reverse=True, key=lambda a:a[1])
+    tempRanking=list(teamsRankingPoints.items())
+    tempRanking.sort(reverse=True, key=lambda a:a[1])
+    
+    ranking=[[k]+list(tempRanking[k]) for k in range(len(tempRanking))]
+    for k in range(len(ranking)-1):
+        if ranking[k][2]==ranking[k+1][2]:
+            ranking[k+1][0]=ranking[k][0]
+        
+    print(ranking)
     
     return ranking
 
