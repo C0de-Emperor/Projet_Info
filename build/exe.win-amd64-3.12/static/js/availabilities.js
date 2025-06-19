@@ -25,7 +25,7 @@ function addLine(){
     var durationInput=document.createElement("input")
     durationInput.type="text"
     durationInput.name="duration"+String(maxLineNumber)
-    durationInput.placeholder="durée (min)"
+    durationInput.placeholder="durée (format xxhxx)"
     durationInput.addEventListener("input", (element) => inputModified(element))
     newDiv.appendChild(durationInput)
     newDiv.appendChild(document.createElement("text"))
