@@ -3,8 +3,8 @@ def GetAppConfig() -> dict:
         txt = f.read()
 
     preParam = txt.split("\n")
-    for i in range(preParam.count("")):
-        preParam.remove("")
+    for i in range(len(preParam)):
+        preParam[i]=preParam[i].replace(" ", "")
 
     parameters = dict([ preParam[i].split(':') for i in range(preParam.__len__()) ])
     return parameters
