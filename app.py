@@ -105,7 +105,7 @@ def CreateTournament():
         except ValueError:
             return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="Invalid data type: matchDuration, and maxTeamNumber must be integers.")
         
-        if tournamentDict["matchDuration"]<=0 or tournamentDict["teamSize"]<=0 or tournamentDict["maxTeamNumber"]<=0:
+        if int(tournamentDict["matchDuration"]) <= 0 or int(tournamentDict["teamSize"]) <=0 or int(tournamentDict["maxTeamNumber"]) <= 0:
             return render_template('createTournament.html', parametersList=tournamentList, isCreating=isCreating, isStarted=isStarted, error="Invalid data type: matchDuration, and maxTeamNumber must be positive.")
 
         if isCreating:
@@ -243,6 +243,9 @@ def CreateTeam():
                 return render_template("createTeam.html", error="Team name already taken", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=True)
             
             dbm.AddVoidTeam(tournamentName, teamName, teamPassword, numberOfPlayers)
+
+            dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
+            return redirect(url_for("ChiefTeamLogin", validation="team created successfully"))
         else:
             teamName=request.args.get("teamName")
             teamPassword=request.args.get("teamPassword")
@@ -254,9 +257,8 @@ def CreateTeam():
             if not dbm.IsTeamLoginCorrect(tournamentName, teamName, teamPassword):
                 return render_template("createTeam.html", error="Invalid Password", parametersList=[tournamentName, teamName, teamPassword], players=teamPlayers, isCreating=False)
 
-        dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
-
-        return redirect(url_for("ChiefTeamLogin", validation="team modified successfully"))
+            dbm.UpdateTeam(tournamentName, teamName, teamPlayers)
+            return redirect(url_for("ChiefTeamLogin", validation="team modified successfully"))
         
 
 @app.route('/chiefTeamLogin', methods=['GET', 'POST'])
